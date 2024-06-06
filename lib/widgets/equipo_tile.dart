@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/equipos_perfil.dart';
 
 class EquipoTile extends StatefulWidget {
   final String nombre;
@@ -45,7 +46,21 @@ class _EquipoTileState extends State<EquipoTile> {
                 Text('${this.widget.descripcion}'),
               ],
             ),
-          )
+          ),
+          Container(
+            padding: EdgeInsets.all(10),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EquipoPerfil(equipo_id: widget.id),
+                  ),
+                );
+              },
+              child: Text('Jugadores del equipo'),
+            ),
+          ),
       ],),
     );
     

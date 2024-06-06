@@ -1,42 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/service/http_service.dart';
-import 'package:flutter_application_1/widgets/equipo_tile.dart';
+import 'package:flutter_application_1/pages/equipos_en_campeonato.dart';
 
 class CampeonatoTile extends StatefulWidget {
   final String nombre;
+  final String juego;
   final String reglas;
   final String premios;
   final int id;
 
-  const CampeonatoTile({this.nombre='sin nombre',this.reglas='sin reglas', this.premios='sin premios', required this.id});
+  const CampeonatoTile({this.nombre='sin nombre',this.juego='sin juego',this.reglas='sin reglas', this.premios='sin premios', required this.id});
 
   @override
   State<CampeonatoTile> createState() => _CampeonatoTileState();
 }
 
 class _CampeonatoTileState extends State<CampeonatoTile> {
-  List<dynamic> equipos = []; // Lista para almacenar los equipos
-  bool isLoading = false; // Variable para controlar el estado de carga
-
-  // Método para obtener los equipos
-  Future<void> _obtenerEquipos() async {
-    setState(() {
-      isLoading = true; // Mostrar indicador de carga
-    });
-    try {
-      final equiposObtenidos = await HttpService().obtenerEquiposPorCampeonato(widget.id);
-      setState(() {
-        equipos = equiposObtenidos;
-      });
-    } catch (e) {
-      // Manejar errores aquí
-    } finally {
-      setState(() {
-        isLoading = false; // Ocultar indicador de carga
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,54 +25,44 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
         borderRadius: BorderRadius.all(Radius.circular(30)),
         border: Border.all(color: Colors.black),
       ),
-      child: Column(
+      child: ExpansionTile(
+        title: Text(widget.nombre, style: TextStyle(fontSize: 20)),
         children: [
           Container(
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(' ${widget.nombre}', style: TextStyle(fontSize: 20)),
-                ),
-              ],
-            )
+            padding: EdgeInsets.only(top: 10),
+            child: Text('Juego: ${widget.juego}', style: TextStyle(fontSize: 16)),
           ),
           Container(
             padding: EdgeInsets.only(top: 10),
-            child: Text('Reglas: ')
+            child: Text('Reglas: ', style: TextStyle(fontSize: 16)),
           ),
           Container(
             padding: EdgeInsets.all(10),
-            child: Text(' ${widget.reglas}', textAlign: TextAlign.justify)
+            child: Text(' ${widget.reglas}', textAlign: TextAlign.justify),
           ),
           Divider(),
           Container(
             padding: EdgeInsets.only(top: 10),
-            child: Text('Premios: ')
+            child: Text('Premios: ', style: TextStyle(fontSize: 16)),
           ),
           Container(
             padding: EdgeInsets.all(10),
-            child: Text(' ${widget.premios}', textAlign: TextAlign.justify)
+            child: Text(' ${widget.premios}', textAlign: TextAlign.justify),
           ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
+          Container(
+            padding: EdgeInsets.all(10),
             child: ElevatedButton(
-              onPressed: _obtenerEquipos, // Llamar al método para obtener equipos
-              child: Text('Ver participantes'),
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EquiposCampeonato(campeonato_Id: widget.id),
+                  ),
+                );
+              },
+              child: Text('Ver Equipos'),
             ),
           ),
-          if (isLoading)
-            CircularProgressIndicator(), // Indicador de carga
-          for (var equipo in equipos)
-            EquipoTile(id:equipo["id"],
-                  nombre:equipo["nombre"],
-                  descripcion: equipo['descripcion'],), // Mostrar cada equipo usando el widget EquipoTile
         ],
       ),
     );

@@ -1,8 +1,9 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/campeonato_tile.dart';
+import 'package:flutter_application_1/widgets/equipo_tile.dart';
 
 class CampeonatosTab extends StatelessWidget {
   const CampeonatosTab({super.key});
@@ -18,6 +19,8 @@ class CampeonatosTab extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Text("CAMPEONATOS", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             ),
+
+
             Expanded(child: FutureBuilder(
               future: HttpService().campeonatos(), 
             builder: (context,AsyncSnapshot snapshot){
@@ -29,11 +32,12 @@ class CampeonatosTab extends StatelessWidget {
                 return CampeonatoTile(
                   id:campeonato["id"],
                   nombre:campeonato["nombre"],
+                  juego: campeonato['juego'],
                   reglas: campeonato['reglas'],
                   premios:campeonato['premios']
                   );
               },);
-            }))
+            })),
           ],
         )
       )
