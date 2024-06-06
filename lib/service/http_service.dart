@@ -23,4 +23,14 @@ class HttpService {
     return [];
   }
 
+  Future<List<dynamic>> obtenerEquiposPorCampeonato(int idCampeonato) async {
+    var respuesta = await http.get(Uri.parse('$apiUrl/campeonatos/$idCampeonato/equipos'));
+
+    if (respuesta.statusCode == 200) {
+      return json.decode(respuesta.body);
+    }
+    print(respuesta.statusCode);
+    return [];
+  }
+
 }

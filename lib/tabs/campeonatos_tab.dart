@@ -14,7 +14,10 @@ class CampeonatosTab extends StatelessWidget {
         color:Colors.blue,
         child:Column(
           children: [
-            Text("LISTA DE CAMPEONATOS"),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text("CAMPEONATOS", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+            ),
             Expanded(child: FutureBuilder(
               future: HttpService().campeonatos(), 
             builder: (context,AsyncSnapshot snapshot){
