@@ -49,35 +49,36 @@ class HttpService {
     print(respuesta.statusCode);
     return [];
   }
-  Future<List<dynamic>> campeonatoPorId(int campeonato_id) async {
+   Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
     var respuesta = await http.get(Uri.parse('$apiUrl/campeonatos/$campeonato_id'));
     if (respuesta.statusCode == 200) {
-      return json.decode(respuesta.body);
-    }
-    
-
-    print(respuesta.statusCode);
-    return [];
-  }
-
-  Future<List<dynamic>> obtenerResultadosDePartidos(int partido_id) async {
-    var respuesta = await http.get(Uri.parse('$apiUrl/resultados/?partido_id=$partido_id'));
-
-    if (respuesta.statusCode == 200) {
-      return json.decode(respuesta.body);
-    }
-    
-
-    print(respuesta.statusCode);
-    return [];
-  }
-  Future<String> obtenerNombreEquipoPorId(int equipo_Id) async {
-    final response = await http.get(Uri.parse('$apiUrl/equipos/$equipo_Id'));
-    if (response.statusCode == 200) {
-      final jsonData = json.decode(response.body);
-      return jsonData['nombre'];
+      var jsonData = json.decode(respuesta.body);
+      // Asumimos que el nombre del campeonato está en el campo 'nombre'
+      return jsonData['nombre'] ?? 'Nombre no disponible';
     } else {
-      throw Exception('Error al obtener el nombre del equipo');
+      print('Error: ${respuesta.statusCode}');
+      return 'Nombre no disponible';
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> obtenerResultadosDePartidos(int partido_id) async {
+    var respuesta = await http.get(Uri.parse('$apiUrl/resultados/?partido_id=$partido_id'));
+    if (respuesta.statusCode == 200) {
+      return List<Map<String, dynamic>>.from(json.decode(respuesta.body));
+    } else {
+      print('Error: ${respuesta.statusCode}');
+      return [];
+    }
+  }
+
+  Future<String> obtenerNombreEquipoPorId(int equipo_id) async {
+    var respuesta = await http.get(Uri.parse('$apiUrl/equipos/$equipo_id'));
+    if (respuesta.statusCode == 200) {
+      var jsonData = json.decode(respuesta.body);
+      return jsonData['nombre'] ?? 'Nombre no disponible';
+    } else {
+      print('Error: ${respuesta.statusCode}');
+      return 'Nombre no disponible';
     }
   }
 }

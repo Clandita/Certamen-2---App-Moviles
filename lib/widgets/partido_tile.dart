@@ -59,14 +59,15 @@ class PartidoTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.amber,
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10),
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('$jugado'),
+                if (jugado == 1)
+                Text('Partido Finalizado'),
+                if (jugado == 0)
+                Text('Partido Por Jugar'),
               ],
             ),
           ),
@@ -74,8 +75,6 @@ class PartidoTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.amber,
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10),
               ),
             ),
             child: Row(
@@ -85,9 +84,31 @@ class PartidoTile extends StatelessWidget {
               ],
             ),
           ),
-          FutureBuilder(
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.amber,
+              borderRadius: BorderRadius.only(
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FutureBuilder<String>(
+                  future: HttpService().obtenerNombreCampeonatoPorId(campeonato_id), // Obtener el nombre del campeonato por su ID
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+                    final nombreCampeonato = snapshot.data ?? 'Sin nombre de campeonato';
+                    return Text('Campeonato: $nombreCampeonato');
+                  },
+                ),
+              ],
+            ),
+          ),
+          FutureBuilder<List<Map<String, dynamic>>>(
             future: HttpService().obtenerResultadosDePartidos(id),
-            builder: (context, AsyncSnapshot snapshot) {
+            builder: (context, snapshot) {
               if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
@@ -98,18 +119,19 @@ class PartidoTile extends StatelessWidget {
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10),
                   ),
+                  
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    FutureBuilder(
-                      future: _obtenerNombresEquipos(snapshot.data),
-                      builder: (context, AsyncSnapshot<List<String>?> nombresSnapshot) {
+                    FutureBuilder<List<String>>(
+                      future: _obtenerNombresEquipos(snapshot.data ?? []),
+                      builder: (context, nombresSnapshot) {
                         if (!nombresSnapshot.hasData || nombresSnapshot.connectionState == ConnectionState.waiting) {
                           return CircularProgressIndicator();
                         }
-                        final nombres = nombresSnapshot.data;
-                        final nombresFormateados = nombres != null && nombres.isNotEmpty ? nombres.join(", ") : 'Sin nombres de equipos';
+                        final nombres = nombresSnapshot.data ?? [];
+                        final nombresFormateados = nombres.isNotEmpty ? nombres.join(", ") : 'Sin nombres de equipos';
                         return Text('Nombres de Equipos: $nombresFormateados');
                       },
                     ),
@@ -120,21 +142,35 @@ class PartidoTile extends StatelessWidget {
           ),
           
           if (jugado == 1) // Agrega el botón solo si jugado es igual a 1
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ResultadosPage()), // Navega a la página de resultados
-                );
-              },
-              child: Text('Ver Resultados'),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.amber,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
+                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ResultadosPage()), // Navega a la página de resultados
+                      );
+                    },
+                    child: Text('Ver Resultados'),
+                  ),
+                ],
+              ),
             ),
         ],
       ),
     );
   }
 
-  Future<List<String>> _obtenerNombresEquipos(resultados) async {
+  Future<List<String>> _obtenerNombresEquipos(List<Map<String, dynamic>> resultados) async {
     final List<String> nombres = [];
     for (var resultado in resultados) {
       final nombre = await HttpService().obtenerNombreEquipoPorId(resultado["equipo_id"]);
