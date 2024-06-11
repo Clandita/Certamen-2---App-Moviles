@@ -1,5 +1,5 @@
+import 'dart:collection';
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class HttpService {
@@ -81,4 +81,38 @@ class HttpService {
       return 'Nombre no disponible';
     }
   }
+  Future<Map<String, dynamic>> EquiposAgregar(String nombre, String descripcion) async {
+    final url = Uri.parse('$apiUrl/equipos');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'nombre': nombre,
+        'descripcion': descripcion,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      try {
+        return jsonDecode(response.body);
+      } catch (e) {
+        return {'message': 'Success', 'data': response.body};
+      }
+    } else {
+      try {
+        return {
+          'message': 'Error',
+          'errors': jsonDecode(response.body)['errors']
+        };
+      } catch (e) {
+        return {
+          'message': 'Error',
+          'errors': {'general': ['Respuesta no válida del servidor']}
+        };
+      }
+    }
+  }
+
+
 }
