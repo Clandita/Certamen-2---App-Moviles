@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/campeonato_tile.dart';
-import 'package:flutter_application_1/widgets/equipo_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CampeonatosTab extends StatelessWidget {

@@ -9,13 +9,20 @@ class CalendarioTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body:Container(
-        color:Colors.blue,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image:AssetImage('assets/images/iconito.jpeg'),
+            fit: BoxFit.cover)
+        ),
         child:Column(
+
           children: [
+
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text("PARTIDOS", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             ),
+
             Expanded(child: FutureBuilder(
               future: HttpService().partidos(), 
             builder: (context,AsyncSnapshot snapshot){

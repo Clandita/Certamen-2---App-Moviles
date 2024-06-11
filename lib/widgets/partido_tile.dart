@@ -106,6 +106,7 @@ class PartidoTile extends StatelessWidget {
               ],
             ),
           ),
+          if (jugado == 0)
           FutureBuilder<List<Map<String, dynamic>>>(
             future: HttpService().obtenerResultadosDePartidos(id),
             builder: (context, snapshot) {
