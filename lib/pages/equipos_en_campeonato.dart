@@ -13,25 +13,39 @@ class EquiposCampeonato extends StatelessWidget {
       appBar: AppBar(
         title: Text('Equipos del Campeonato'),
       ),
-      body: FutureBuilder(
-        future: HttpService().obtenerEquiposPorCampeonato(campeonato_Id),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          return ListView.builder(
-            itemCount: snapshot.data.length,
-            itemBuilder: (context, index) {
-              var equipo = snapshot.data[index];
-              return EquipoTile(
-                id: equipo["id"],
-                nombre: equipo["nombre"],
-                descripcion: equipo['descripcion'],
-              );
-            },
-          );
-        },
+      body: 
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.grey
+        ),
+        child: FutureBuilder(
+          future: HttpService().obtenerEquiposPorCampeonato(campeonato_Id),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                var equipo = snapshot.data[index];
+                return EquipoTile(
+                  id: equipo["id"],
+                  nombre: equipo["nombre"],
+                  descripcion: equipo['descripcion'],
+                );
+              },
+            );
+          },
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color:Colors.white
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        backgroundColor: Color(0xff142157),
+        onPressed: (){})
     );
   }
 }

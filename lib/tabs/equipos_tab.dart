@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/equipo_agregar.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/equipo_tile.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EquiposTab extends StatefulWidget {
   const EquiposTab({super.key});
@@ -15,12 +16,17 @@ class _EquiposTabState extends State<EquiposTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       body:Container(
-        color:Colors.blue,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image:AssetImage('assets/images/iconito.jpeg'), 
+            fit: BoxFit.cover
+          )  
+        ),
         child:Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text("EQUIPOS", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              child: Text("EQUIPOS", style:  GoogleFonts.oswald(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),),
             ),
             Expanded(child: FutureBuilder(
               future: HttpService().equipos(), 

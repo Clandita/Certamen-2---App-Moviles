@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/equipos_en_campeonato.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class CampeonatoTile extends StatefulWidget {
   final String nombre;
@@ -24,18 +25,18 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
         margin: EdgeInsets.fromLTRB(5, 5, 5, 1),
         padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
         decoration: BoxDecoration(
-          color: Colors.grey,
+          color: const Color.fromRGBO(158, 158, 158, 0.8),
           border: Border.all(color: Colors.black),
         ),
         child: ExpansionTile(
-          backgroundColor: Colors.grey,
-          title: Center(child: Text(widget.nombre, style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:Color(0xff142157))))),
+          backgroundColor: const Color.fromRGBO(158, 158, 158, 0.8),
+          title: Center(child: Text(widget.nombre, style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)))),
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
           
               children: [
-                Icon(Icons.games_outlined, size: 16,),
+                Icon(MdiIcons.nintendoGameBoy, size: 20,),
                 Container(
                   padding: EdgeInsets.only(left: 20),
                   child: Text('Juego', style:  GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
@@ -50,7 +51,7 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.rule, size: 16,),
+                Icon(MdiIcons.ruler, size: 20,),
                 Container(
                   padding: EdgeInsets.only(left: 20),
                   child: Text('Reglas', style:  GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
@@ -65,7 +66,7 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.gamepad_outlined, size: 16,),
+                Icon(MdiIcons.trophy, size: 20,),
                 Container(
                   padding: EdgeInsets.only(left: 20),
                   child: Text('Premios', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
@@ -76,7 +77,24 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
               padding: EdgeInsets.all(10),
               child: Text(' ${widget.premios}', textAlign: TextAlign.justify, style:  GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16))),
             ),
-            Container(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EquiposCampeonato(campeonato_Id: widget.id),
+                        ),
+                      );
+                    },
+                    child: Text('Equipos Participantes', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black))),
+                  ),
+                ),
+                Container(
               padding: EdgeInsets.all(10),
               child: ElevatedButton(
                 onPressed: () {
@@ -87,9 +105,12 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                     ),
                   );
                 },
-                child: Text('Equipos Participantes', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+                child: Text('Partidos', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black))),
               ),
             ),
+              ],
+            ),
+            
           ],
         ),
       ),
