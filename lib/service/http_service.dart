@@ -149,9 +149,30 @@ Future<Map<String, dynamic>> updateEquipos(int id, String nombre, String descrip
 }
 
 
+  Future<LinkedHashMap<String, dynamic>> updateJugador(String rut,String nombre, String apellido, String nickname) async {
+    print('$rut');
+    var url=Uri.parse('$apiUrl/jugadores/?rut=$rut');
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      body: json.encode(<String, dynamic>{
+        'nombre': nombre,
+        'apellido': apellido,
+        'nickname': nickname
 
-  // Método para procesar la respuesta del servidor
-  Map<String, dynamic> _procesarRespuesta(http.Response response) {
+  }),
+      );
+      return json.decode(response.body);}
+
+
+
+
+
+
+    Map<String, dynamic> _procesarRespuesta(http.Response response) {
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         if (response.body.isEmpty) {
@@ -177,25 +198,6 @@ Future<Map<String, dynamic>> updateEquipos(int id, String nombre, String descrip
       }
     }
   }
-
-
-  Future<LinkedHashMap<String, dynamic>> updateJugador(String rut,String nombre, String apellido, String nickname) async {
-    print('$rut');
-    var url=Uri.parse('$apiUrl/jugadores/?rut=$rut');
-    var response = await http.put(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json',
-      },
-      body: json.encode(<String, dynamic>{
-        'nombre': nombre,
-        'apellido': apellido,
-        'nickname': nickname
-
-  }),
-      );
-      return json.decode(response.body);}
 
 
   
