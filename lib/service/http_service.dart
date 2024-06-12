@@ -1,5 +1,8 @@
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+
 
 class HttpService {
   final String apiUrl = 'http://10.0.2.2:8000/api';
@@ -48,13 +51,8 @@ class HttpService {
       throw Exception('Error al obtener jugadores por equipo: ${respuesta.statusCode}');
     }
   }
-<<<<<<< HEAD
 
   Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
-=======
-  
-   Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
->>>>>>> 9ad3e7a3fdc82dcf161dadd39760d70e14f84f24
     var respuesta = await http.get(Uri.parse('$apiUrl/campeonatos/$campeonato_id'));
     if (respuesta.statusCode == 200) {
       var jsonData = json.decode(respuesta.body);
@@ -132,11 +130,36 @@ class HttpService {
     }
   }
 
+Future<Map<String, dynamic>> updateEquipos(int id, String nombre, String descripcion) async {
+
+  var url = Uri.parse('$apiUrl/equipos/$id');
+  var response = await http.put(
+    url,
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Accept': 'application/json',
+    },
+    body: json.encode(<String, dynamic>{
+      'nombre': nombre,
+      'descripcion': descripcion,
+    }),
+  );
+
+  return json.decode(response.body);
+}
+
+
+
+  // Método para procesar la respuesta del servidor
   Map<String, dynamic> _procesarRespuesta(http.Response response) {
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
+        if (response.body.isEmpty) {
+          return {'message': 'Success', 'data': 'Respuesta vacía del servidor'};
+        }
         return jsonDecode(response.body);
       } catch (e) {
+        print('Error al decodificar la respuesta: $e');
         return {'message': 'Success', 'data': response.body};
       }
     } else {
@@ -146,6 +169,7 @@ class HttpService {
           'errors': jsonDecode(response.body)['errors']
         };
       } catch (e) {
+        print('Error al procesar la respuesta de error: $e');
         return {
           'message': 'Error',
           'errors': {'general': ['Respuesta no válida del servidor']}
@@ -153,31 +177,8 @@ class HttpService {
       }
     }
   }
-<<<<<<< HEAD
-  Future<Map<String, dynamic>> editarEquipo(int id, String nombre, String descripcion) async {
-    final String url = '$apiUrl/equipos/$id';
   
-    final Map<String, String> body = {
-      'nombre': nombre,
-      'descripcion': descripcion,
-    };
 
-    final http.Response response = await http.put(
-      Uri.parse(url),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(body),
-    );
-=======
->>>>>>> 9ad3e7a3fdc82dcf161dadd39760d70e14f84f24
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Error al editar el equipo: ${response.statusCode}');
-    }
-  }
 
   Future<bool> updateJugador(String rut,String nombre, String apellido, String nickname) async {
     final response = await http.put(

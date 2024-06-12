@@ -6,6 +6,7 @@ class EquipoEditar extends StatefulWidget {
   final String nombre;
   final String descripcion;
 
+
   EquipoEditar({required this.id, required this.nombre, required this.descripcion});
 
   @override
@@ -13,23 +14,17 @@ class EquipoEditar extends StatefulWidget {
 }
 
 class _EquipoEditarState extends State<EquipoEditar> {
-  late TextEditingController _nombreController;
-  late TextEditingController _descripcionController;
+  late TextEditingController nombreController;
+  late TextEditingController descripcionController;
+  late TextEditingController idController;
 
   @override
   void initState() {
     super.initState();
-    _nombreController = TextEditingController(text: widget.nombre);
-    _descripcionController = TextEditingController(text: widget.descripcion);
+    idController=TextEditingController(text:widget.id.toString());
+    nombreController = TextEditingController(text: widget.nombre);
+    descripcionController = TextEditingController(text: widget.descripcion);
   }
-
-  @override
-  void dispose() {
-    _nombreController.dispose();
-    _descripcionController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,14 +37,14 @@ class _EquipoEditarState extends State<EquipoEditar> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             TextField(
-              controller: _nombreController,
+              controller: nombreController,
               decoration: InputDecoration(
                 labelText: 'Nombre del Equipo',
               ),
             ),
             SizedBox(height: 20),
             TextField(
-              controller: _descripcionController,
+              controller: descripcionController,
               decoration: InputDecoration(
                 labelText: 'Descripción del Equipo',
               ),
@@ -58,29 +53,16 @@ class _EquipoEditarState extends State<EquipoEditar> {
             SizedBox(height: 20),
             ElevatedButton(
   onPressed: () async {
-    String nombreEditado = _nombreController.text;
-    String descripcionEditada = _descripcionController.text;
-    
-    try {
-      // Llamar al método editarEquipo del servicio HttpService
-      var response = await HttpService().editarEquipo(widget.id, nombreEditado, descripcionEditada);
-      
-      // Verificar la respuesta y mostrar un mensaje adecuado
-      if (response.containsKey('message') && response['message'] == 'Success') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Equipo editado correctamente')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al editar el equipo')),
-        );
-      }
-    } catch (error) {
-      print('Error al editar el equipo: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al editar el equipo')),
+    var respuesta= await HttpService().updateEquipos(
+      int.parse(idController.text), 
+      nombreController.text, 
+      descripcionController.text,
       );
-    }
+      if(respuesta=='Error'){
+        print("nooo");
+      }else{Navigator.pop(context); setState(() {
+        
+      });}
   },
   child: Text('Guardar Cambios'),
 ),
