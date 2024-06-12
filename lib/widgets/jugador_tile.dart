@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 class JugadorTile extends StatefulWidget {
   
   final String rut;
@@ -20,47 +21,48 @@ class _JugadorTileState extends State<JugadorTile> {
       padding: EdgeInsets.all(0),
       margin: EdgeInsets.all(10),    
           decoration: BoxDecoration(
-            color: Colors.blue,
+            color: Color.fromRGBO(158, 158, 158, 0.8),
             border:Border.all(color: Colors.black),
             borderRadius: BorderRadius.all( Radius.circular(10))
           ),
       child: Column(children: [
 
         Container(
+          padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.amber,
+            color: Color.fromRGBO(158, 158, 158, 0.8),
             borderRadius: BorderRadius.only( topLeft: Radius.circular(10), topRight: Radius.circular(10))
           ),
           child: Row(
+        
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('${this.widget.nombre} '+'${this.widget.apellido}'),
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: AssetImage('assets/images/user.png'),
+              )
             ],
           )),
-          Container(
+        Container(
           decoration: BoxDecoration(
-            color: Colors.amber,
-          ),
+            color: Colors.black,
+            ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('${this.widget.nickname}'),
+              Text('${this.widget.nombre} '+'${this.widget.apellido}', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white))),
             ],
           )),
-          
           Container(
-          decoration: BoxDecoration(
-            color: Colors.amber,
-            borderRadius: BorderRadius.only( bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))
+            child: Text('Nickname:',style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
           ),
+          Container(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('${this.widget.rut}'),
+              Text('${this.widget.nickname}',style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))),
             ],
           )),
-
-
       ],),
     );
     

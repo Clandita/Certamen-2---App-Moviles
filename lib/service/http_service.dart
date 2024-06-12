@@ -49,6 +49,7 @@ class HttpService {
     print(respuesta.statusCode);
     return [];
   }
+  
    Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
     var respuesta = await http.get(Uri.parse('$apiUrl/campeonatos/$campeonato_id'));
     if (respuesta.statusCode == 200) {
@@ -113,6 +114,16 @@ class HttpService {
       }
     }
   }
+
+  Future<Map<String, dynamic>> obtenerEquipo(int equipoId) async {
+    final response = await http.get(Uri.parse('$apiUrl/equipos/$equipoId'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('');
+    }
+  }
+
 
 
 }

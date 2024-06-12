@@ -43,7 +43,7 @@ class _EquipoTileState extends State<EquipoTile> {
             ],
           )),
           Container(
-            color: Colors.white,
+            color: const Color.fromRGBO(255, 255, 255, 0.8),
             child: Divider(color: Colors.black)),
           Container(
             decoration: BoxDecoration(
