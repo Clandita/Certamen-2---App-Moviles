@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/service/http_service.dart';
+
 class PartidosAgregar extends StatefulWidget {
   const PartidosAgregar({super.key});
 
@@ -22,50 +23,90 @@ class _PartidosAgregarState extends State<PartidosAgregar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Agregar Nuevo partido"),
+        title: Text("Agregar Nuevo Partido"),
       ),
       body: Padding(
         padding: EdgeInsets.all(8),
         child: ListView(
           children: [
-            Text("Nombre Equipo:"),
+            Text("Hora:"),
             TextFormField(
-              decoration: InputDecoration(labelText: "Nombre"),
+              decoration: InputDecoration(labelText: "Hora (YYYY-MM-DD HH:MM:SS)"),
               controller: horaController,
             ),
             Text(
               errHora,
               style: TextStyle(color: Colors.red),
             ),
+            Text("Jugado:"),
+            TextFormField(
+              decoration: InputDecoration(labelText: "Jugado (true/false)"),
+              controller: jugadoController,
+            ),
+            Text(
+              errJugado,
+              style: TextStyle(color: Colors.red),
+            ),
+            Text("Lugar:"),
+            TextFormField(
+              decoration: InputDecoration(labelText: "Lugar"),
+              controller: lugarController,
+            ),
+            Text(
+              errLugar,
+              style: TextStyle(color: Colors.red),
+            ),
+            Text("ID Campeonato:"),
+            TextFormField(
+              decoration: InputDecoration(labelText: "ID Campeonato"),
+              controller: idcampeonatoController,
+            ),
+            Text(
+              errIdCampeonato,
+              style: TextStyle(color: Colors.red),
+            ),
             Text(
               errGeneral,
               style: TextStyle(color: Colors.red),
             ),
-            /*Container(
+            Container(
               margin: EdgeInsets.only(top: 20),
               child: FilledButton(
                 style: FilledButton.styleFrom(
                   backgroundColor: Color(0xff134577),
                 ),
-                child: Text("Agregar equipo"),
+                child: Text("Agregar Partido"),
                 onPressed: () async {
-                  var respuesta = await HttpService().(
-                    nombreController.text,
-                    descripcionController.text,
-                  );
-                  if (respuesta['message'] == 'Error') {
-                    var errores = respuesta['errors'];
+                  try {
+                    DateTime hora = DateTime.parse(horaController.text);
+                    bool jugado = jugadoController.text.toLowerCase() == 'true';
+                    int campeonatoId = int.parse(idcampeonatoController.text);
+                    var respuesta = await HttpService().partidosAgregar(
+                      hora.toIso8601String(),
+                      jugado,
+                      lugarController.text,
+                      campeonatoId,
+                    );
+                    if (respuesta['message'] == 'Error') {
+                      var errores = respuesta['errors'];
+                      setState(() {
+                        errHora = errores['hora'] != null ? errores['hora'][0] : "";
+                        errJugado = errores['jugado'] != null ? errores['jugado'][0] : "";
+                        errLugar = errores['lugar'] != null ? errores['lugar'][0] : "";
+                        errIdCampeonato = errores['campeonato_id'] != null ? errores['campeonato_id'][0] : "";
+                        errGeneral = errores['general'] != null ? errores['general'][0] : "";
+                      });
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  } catch (e) {
                     setState(() {
-                      errNombre = errores['nombre'] != null ? errores['nombre'][0] : "";
-                      errDescripcion = errores['descripcion'] != null ? errores['descripcion'][0] : "";
-                      errGeneral = errores['general'] != null ? errores['general'][0] : "";
+                      errGeneral = 'Error en el formato de entrada: ${e.toString()}';
                     });
-                  } else {
-                    Navigator.pop(context);
                   }
                 },
               ),
-            )*/
+            )
           ],
         ),
       ),

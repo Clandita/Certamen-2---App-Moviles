@@ -205,6 +205,25 @@ Future<Map<String, dynamic>> updateEquipos(int id, String nombre, String descrip
     return _procesarRespuesta(response);
   }
   
+  Future<Map<String, dynamic>> partidosAgregar(String hora, bool jugado, String lugar, int campeonatoId) async {
+    final url = Uri.parse('$apiUrl/partidos');
+    print(hora);
+    print (jugado);
+    print(lugar);
+    print(campeonatoId);
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'hora': hora,
+        'jugado': jugado,
+        'lugar': lugar,
+        'campeonato_id': campeonatoId,
+      }),
+    );
+
+    return _procesarRespuesta(response);
+  }
 
 
   
