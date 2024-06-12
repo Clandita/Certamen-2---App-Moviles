@@ -14,17 +14,20 @@ class EquipoEditar extends StatefulWidget {
 }
 
 class _EquipoEditarState extends State<EquipoEditar> {
+  late TextEditingController idController;
   late TextEditingController nombreController;
   late TextEditingController descripcionController;
-  late TextEditingController idController;
+  
 
   @override
   void initState() {
     super.initState();
-    idController=TextEditingController(text:widget.id.toString());
+    idController=TextEditingController(text: widget.id.toString());
     nombreController = TextEditingController(text: widget.nombre);
     descripcionController = TextEditingController(text: widget.descripcion);
   }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,20 +55,23 @@ class _EquipoEditarState extends State<EquipoEditar> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-  onPressed: () async {
-    var respuesta= await HttpService().updateEquipos(
-      int.parse(idController.text), 
-      nombreController.text, 
-      descripcionController.text,
-      );
-      if(respuesta=='Error'){
-        print("nooo");
-      }else{Navigator.pop(context); setState(() {
-        
-      });}
-  },
-  child: Text('Guardar Cambios'),
-),
+              onPressed: () async {
+                var respuesta= await HttpService().updateEquipos(
+                  int.parse(idController.text), 
+                  nombreController.text, 
+                  descripcionController.text,
+                );
+                if(respuesta=='Error'){
+                  print("nooo");
+                }else{
+                  print('ID : ${idController.text}');
+
+                  Navigator.pop(context); 
+                  setState(() {});
+                }
+            },
+              child: Text('Guardar'),
+            ),
 
           ],
         ),
