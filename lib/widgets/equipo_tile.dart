@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/editar_equipo.dart';
 import 'package:flutter_application_1/pages/equipos_perfil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class EquipoTile extends StatefulWidget {
+  final int id;
   final String nombre;
   final String descripcion;
-  final int id;
+  
 
   const EquipoTile({this.nombre='sin nombre', this.descripcion='sin descripcion', required this.id});
 
@@ -16,6 +18,40 @@ class EquipoTile extends StatefulWidget {
 }
 
 class _EquipoTileState extends State<EquipoTile> {
+
+  late String nombre;
+  late String descripcion;
+
+  @override
+  void initState() {
+    super.initState();
+    nombre = widget.nombre;
+    descripcion = widget.descripcion;
+
+  }
+
+  void editarEquipo() async {
+    final updatedData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EquipoEditar(
+          id: widget.id,
+          nombre: nombre,
+          descripcion: descripcion,
+        ),
+      ),
+    );
+
+    if (updatedData != null) {
+      setState(() {
+        nombre = updatedData['nombre'];
+        descripcion = updatedData['descripcion'];
+      });
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,21 +92,6 @@ class _EquipoTileState extends State<EquipoTile> {
                 Text('${this.widget.descripcion}',style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16))),
               ],
             ),
-          ),Container(
-            padding: EdgeInsets.all(10),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EquipoEditar(id: widget.id,
-          nombre: widget.nombre,
-          descripcion: widget.descripcion),
-                  ),
-                );
-              },
-              child: Text('Editar equipo', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, color: Colors.black))),
-            ),
           ),
           Container(
             padding: EdgeInsets.all(10),
@@ -86,7 +107,41 @@ class _EquipoTileState extends State<EquipoTile> {
               child: Text('Jugadores del equipo', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, color: Colors.black))),
             ),
           ),
-      ],),
+            
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EquipoEditar(
+                          id: widget.id, 
+                          nombre: nombre,
+                          descripcion: descripcion),
+                      ),
+                    );
+                  },
+                  icon: Icon(MdiIcons.bookEdit,color: Colors.white,size: 30,),
+                ),
+              ),
+
+              Container(
+                
+                child: IconButton(
+                  onPressed: () {
+                  },
+                  icon: Icon(MdiIcons.delete,color: Colors.white,size: 30,),
+                ),
+              ),
+            ],
+          ),
+            ],
+          ),
+      
     );
     
   }
