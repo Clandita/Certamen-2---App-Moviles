@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/editar_equipo.dart';
 import 'package:flutter_application_1/pages/equipos_perfil.dart';
+import 'package:flutter_application_1/service/http_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -18,13 +19,14 @@ class EquipoTile extends StatefulWidget {
 }
 
 class _EquipoTileState extends State<EquipoTile> {
-
+  late TextEditingController idController;
   late String nombre;
   late String descripcion;
 
   @override
   void initState() {
     super.initState();
+    idController=TextEditingController(text: widget.id.toString());
     nombre = widget.nombre;
     descripcion = widget.descripcion;
 
@@ -132,11 +134,24 @@ class _EquipoTileState extends State<EquipoTile> {
               Container(
                 
                 child: IconButton(
-                  onPressed: () {
+                  onPressed: () async {
+                  var respuesta= await HttpService().deleteEquipo(
+                    int.parse(idController.text)
+               
+                );
+                if(respuesta=='Error'){
+                  print("nooo");
+                }else{
+                  setState(() {});
+                }
                   },
                   icon: Icon(MdiIcons.delete,color: Colors.white,size: 30,),
                 ),
               ),
+
+
+
+
             ],
           ),
             ],

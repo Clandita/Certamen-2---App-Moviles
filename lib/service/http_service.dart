@@ -130,27 +130,40 @@ class HttpService {
     }
   }
 
-Future<Map<String, dynamic>> updateEquipos(int id, String nombre, String descripcion) async {
+  Future<Map<String, dynamic>> updateEquipos(int id, String nombre, String descripcion) async {
 
-  var url = Uri.parse('$apiUrl/equipos/$id');
-  var response = await http.put(
-    url,
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-      'Accept': 'application/json',
-    },
-    body: json.encode(<String, dynamic>{
-      'nombre': nombre,
-      'descripcion': descripcion,
-    }),
-  );
+    var url = Uri.parse('$apiUrl/equipos/$id');
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      body: json.encode(<String, dynamic>{
+        'nombre': nombre,
+        'descripcion': descripcion,
+      }),
+    );
 
-  return json.decode(response.body);
-}
+    return json.decode(response.body);
+  }
+
+
+  Future<String> deleteEquipo(int id) async {
+    var url=Uri.parse('$apiUrl/equipos/$id');
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      
+      );
+      return response.body;
+      }
 
 
   Future<LinkedHashMap<String, dynamic>> updateJugador(String rut,String nombre, String apellido, String nickname) async {
-    print('$rut');
     var url=Uri.parse('$apiUrl/jugadores/?rut=$rut');
     var response = await http.put(
       url,
@@ -204,6 +217,9 @@ Future<Map<String, dynamic>> updateEquipos(int id, String nombre, String descrip
 
     return _procesarRespuesta(response);
   }
+
+
+
   
   Future<Map<String, dynamic>> partidosAgregar(String hora, bool jugado, String lugar, int campeonatoId) async {
     final url = Uri.parse('$apiUrl/partidos');

@@ -137,14 +137,19 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                 ),
               ],
             ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: () {
-                  _eliminarCampeonato(widget.id);
-                },
-                child: Text('Eliminar', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black))),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: IconButton(
+                    onPressed: () {
+                      _eliminarCampeonato(widget.id);
+                    },
+                    icon: Icon(MdiIcons.delete),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

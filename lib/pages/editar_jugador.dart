@@ -31,7 +31,7 @@ class _EditarJugadorPageState extends State<EditarJugadorPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('Reconstruyendo EditarJugadorPage');
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('Editar Jugador',style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))),
