@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/service/http_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EditarJugadorPage extends StatefulWidget {
   final String rut;
@@ -30,9 +31,10 @@ class _EditarJugadorPageState extends State<EditarJugadorPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Reconstruyendo EditarJugadorPage');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Jugador'),
+        title: Text('Editar Jugador',style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -40,18 +42,27 @@ class _EditarJugadorPageState extends State<EditarJugadorPage> {
           children: [
             TextField(
               controller: nombreController,
-              decoration: InputDecoration(labelText: 'Nombre'),
+              decoration: InputDecoration(
+                labelText: 'Nombre',
+                labelStyle:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
             ),
             TextField(
               controller: apellidoController,
-              decoration: InputDecoration(labelText: 'Apellido'),
+              decoration: InputDecoration(
+                labelText: 'Apellido',
+                labelStyle:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
             ),
             TextField(
               controller: nicknameController,
-              decoration: InputDecoration(labelText: 'Nickname'),
+              decoration: InputDecoration(
+                labelText: 'Nickname',
+                labelStyle:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
             ),
             SizedBox(height: 20),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey
+              ),
               onPressed: () async {
                   var respuesta = await HttpService().updateJugador(
                     rutController.text,
@@ -62,14 +73,13 @@ class _EditarJugadorPageState extends State<EditarJugadorPage> {
                   print('siiii');
                   if (respuesta == 'Error') {
                     print('nooo');
-                    setState(() {
-
-                    });
+                    
                   } else {
+                    setState(() {});
                     Navigator.pop(context);
                   }
                 },
-              child: Text('Guardar'),
+              child: Text('Guardar', style:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black))),
             ),
           ],
         ),

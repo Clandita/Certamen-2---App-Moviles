@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -48,13 +49,8 @@ class HttpService {
       throw Exception('Error al obtener jugadores por equipo: ${respuesta.statusCode}');
     }
   }
-<<<<<<< HEAD
 
   Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
-=======
-  
-   Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
->>>>>>> 9ad3e7a3fdc82dcf161dadd39760d70e14f84f24
     var respuesta = await http.get(Uri.parse('$apiUrl/campeonatos/$campeonato_id'));
     if (respuesta.statusCode == 200) {
       var jsonData = json.decode(respuesta.body);
@@ -153,7 +149,6 @@ class HttpService {
       }
     }
   }
-<<<<<<< HEAD
   Future<Map<String, dynamic>> editarEquipo(int id, String nombre, String descripcion) async {
     final String url = '$apiUrl/equipos/$id';
   
@@ -169,8 +164,6 @@ class HttpService {
       },
       body: jsonEncode(body),
     );
-=======
->>>>>>> 9ad3e7a3fdc82dcf161dadd39760d70e14f84f24
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -179,23 +172,25 @@ class HttpService {
     }
   }
 
-  Future<bool> updateJugador(String rut,String nombre, String apellido, String nickname) async {
-    final response = await http.put(
-      Uri.parse('$apiUrl/jugadores/$rut'), 
-      headers: {"Content-Type": "application/json"},
-      body: json.encode({
+  Future<LinkedHashMap<String, dynamic>> updateJugador(String rut,String nombre, String apellido, String nickname) async {
+    print('$rut');
+    var url=Uri.parse('$apiUrl/jugadores/?rut=$rut');
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      body: json.encode(<String, dynamic>{
         'nombre': nombre,
         'apellido': apellido,
         'nickname': nickname
 
-  }),    );
+  }),
+      );
+      return json.decode(response.body);}
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('');
-    }
-  }
+
   
 
 

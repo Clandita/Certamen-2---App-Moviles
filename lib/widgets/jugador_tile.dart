@@ -132,6 +132,7 @@ class _JugadorTileState extends State<JugadorTile> {
               IconButton(
                 onPressed: editarJugador,
                 icon: Icon(MdiIcons.humanEdit)),
+              IconButton(onPressed: (){}, icon: Icon(MdiIcons.delete))
             ],
           ),
         ),
