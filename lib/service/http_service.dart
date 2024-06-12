@@ -47,13 +47,8 @@ class HttpService {
     print(respuesta.statusCode);
     return [];
   }
-<<<<<<< HEAD
   
    Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
-=======
-
-  Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
->>>>>>> 076a59c702975e36b1f998fa1502b7c43a285b5e
     var respuesta = await http.get(Uri.parse('$apiUrl/campeonatos/$campeonato_id'));
     if (respuesta.statusCode == 200) {
       var jsonData = json.decode(respuesta.body);
@@ -117,7 +112,6 @@ class HttpService {
       }
     }
   }
-<<<<<<< HEAD
 
   Future<Map<String, dynamic>> obtenerEquipo(int equipoId) async {
     final response = await http.get(Uri.parse('$apiUrl/equipos/$equipoId'));
@@ -128,9 +122,25 @@ class HttpService {
     }
   }
 
+  Future<bool> updateJugador(String rut,String nombre, String apellido, String nickname) async {
+    final response = await http.put(
+      Uri.parse('$apiUrl/jugadores/$rut'), 
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({
+        'nombre': nombre,
+        'apellido': apellido,
+        'nickname': nickname
+
+  }),    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('');
+    }
+  }
+  
+
 
 
 }
-=======
-}
->>>>>>> 076a59c702975e36b1f998fa1502b7c43a285b5e
