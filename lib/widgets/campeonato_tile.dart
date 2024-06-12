@@ -11,7 +11,7 @@ class CampeonatoTile extends StatefulWidget {
   final String premios;
   final int id;
 
-  const CampeonatoTile({this.nombre='sin nombre',this.juego='sin juego',this.reglas='sin reglas', this.premios='sin premios', required this.id});
+  const CampeonatoTile({this.nombre='sin nombre', this.juego='sin juego', this.reglas='sin reglas', this.premios='sin premios', required this.id});
 
   @override
   State<CampeonatoTile> createState() => _CampeonatoTileState();
@@ -35,7 +35,6 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-          
               children: [
                 Icon(MdiIcons.nintendoGameBoy, size: 20,),
                 Container(
@@ -96,25 +95,25 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                   ),
                 ),
                 Container(
-              padding: EdgeInsets.all(10),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PartidosCampeonato(campeonato_Id: widget.id),
-                    ),
-                  );
-                },
-                child: Text('Partidos', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black))),
-              ),
-            ),
+                  padding: EdgeInsets.all(10),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PartidosCampeonato(campeonato_Id: widget.id),
+                        ),
+                      );
+                    },
+                    child: Text('Partidos', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black))),
+                  ),
+                ),
               ],
             ),
-            
           ],
         ),
       ),
     );
   }
 }
+
