@@ -198,6 +198,13 @@ Future<Map<String, dynamic>> updateEquipos(int id, String nombre, String descrip
       }
     }
   }
+  Future<Map<String, dynamic>> eliminarCampeonato(int id) async {
+    final url = Uri.parse('$apiUrl/campeonatos/$id');
+    final response = await http.delete(url);
+
+    return _procesarRespuesta(response);
+  }
+  
 
 
   

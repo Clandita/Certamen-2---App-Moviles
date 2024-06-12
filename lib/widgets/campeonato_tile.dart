@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/equipos_en_campeonato.dart';
 import 'package:flutter_application_1/pages/partidos.dart';
+import 'package:flutter_application_1/service/http_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -18,6 +19,31 @@ class CampeonatoTile extends StatefulWidget {
 }
 
 class _CampeonatoTileState extends State<CampeonatoTile> {
+  final HttpService httpService = HttpService();
+
+  Future<void> _eliminarCampeonato(int id) async {
+    try {
+      final response = await httpService.eliminarCampeonato(id);
+      if (response['message'] == 'Success') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Campeonato eliminado exitosamente'))
+        );
+        setState(() {
+          // Aquí debes definir cómo deseas actualizar la interfaz de usuario
+          // Por ejemplo, eliminando el elemento de una lista de campeonatos
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al eliminar el campeonato: ${response['errors']}'))
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al eliminar el campeonato: $e'))
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -94,6 +120,7 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                     child: Text('Equipos Participantes', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black))),
                   ),
                 ),
+                
                 Container(
                   padding: EdgeInsets.all(10),
                   child: ElevatedButton(
@@ -109,6 +136,15 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                   ),
                 ),
               ],
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: ElevatedButton(
+                onPressed: () {
+                  _eliminarCampeonato(widget.id);
+                },
+                child: Text('Eliminar', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black))),
+              ),
             ),
           ],
         ),

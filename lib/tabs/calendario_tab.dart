@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/partidos_agregar.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/partido_tile.dart';
 
-class CalendarioTab extends StatelessWidget {
+class CalendarioTab extends StatefulWidget {
   const CalendarioTab({super.key});
 
+  @override
+  State<CalendarioTab> createState() => _CalendarioTabState();
+}
+
+class _CalendarioTabState extends State<CalendarioTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +53,20 @@ class CalendarioTab extends StatelessWidget {
 
           ],
         )
-      )
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color:Colors.white
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        backgroundColor: Color(0xff142157),
+        onPressed: (){
+          MaterialPageRoute ruta =MaterialPageRoute(
+            builder:(context)=>PartidosAgregar(),
+            );
+          Navigator.push(context,ruta).then((value){setState((){});});
+        })    
 
     );
   }
