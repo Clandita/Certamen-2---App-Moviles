@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/equipos_en_campeonato.dart';
+import 'package:flutter_application_1/pages/partidos.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -101,7 +102,7 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => EquiposCampeonato(campeonato_Id: widget.id),
+                      builder: (context) => PartidosCampeonato(campeonato_Id: widget.id),
                     ),
                   );
                 },
