@@ -1,13 +1,19 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/campeonato_agregar.dart';
 
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/campeonato_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CampeonatosTab extends StatelessWidget {
+class CampeonatosTab extends StatefulWidget {
   const CampeonatosTab({super.key});
 
+  @override
+  State<CampeonatosTab> createState() => _CampeonatosTabState();
+}
+
+class _CampeonatosTabState extends State<CampeonatosTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +58,12 @@ class CampeonatosTab extends StatelessWidget {
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         backgroundColor: Color(0xff142157),
-        onPressed: (){})    
+        onPressed: (){
+          MaterialPageRoute ruta =MaterialPageRoute(
+            builder:(context)=>CampeonatoAgregar(),
+            );
+          Navigator.push(context,ruta).then((value){setState((){});});
+        })    
     );
   }
 }

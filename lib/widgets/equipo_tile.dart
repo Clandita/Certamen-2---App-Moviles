@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/editar_equipo.dart';
 import 'package:flutter_application_1/pages/equipos_perfil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -43,7 +44,7 @@ class _EquipoTileState extends State<EquipoTile> {
             ],
           )),
           Container(
-            color: const Color.fromRGBO(255, 255, 255, 0.8),
+            color: Colors.white,
             child: Divider(color: Colors.black)),
           Container(
             decoration: BoxDecoration(
@@ -54,6 +55,21 @@ class _EquipoTileState extends State<EquipoTile> {
               children: [
                 Text('${this.widget.descripcion}',style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16))),
               ],
+            ),
+          ),Container(
+            padding: EdgeInsets.all(10),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EquipoEditar(id: widget.id,
+          nombre: widget.nombre,
+          descripcion: widget.descripcion),
+                  ),
+                );
+              },
+              child: Text('Editar equipo', style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, color: Colors.black))),
             ),
           ),
           Container(

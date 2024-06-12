@@ -21,9 +21,10 @@ class HttpService {
 
     if (respuesta.statusCode == 200) {
       return json.decode(respuesta.body);
+    } else {
+      print('Error: ${respuesta.statusCode}');
+      throw Exception('Error al listar datos: ${respuesta.statusCode}');
     }
-    print(respuesta.statusCode);
-    return [];
   }
 
   Future<List<dynamic>> obtenerEquiposPorCampeonato(int campeonato_id) async {
@@ -31,10 +32,10 @@ class HttpService {
 
     if (respuesta.statusCode == 200) {
       return json.decode(respuesta.body);
+    } else {
+      print('Error: ${respuesta.statusCode}');
+      throw Exception('Error al obtener equipos por campeonato: ${respuesta.statusCode}');
     }
-    
-    print(respuesta.statusCode);
-    return [];
   }
 
   Future<List<dynamic>> jugadoresPorEquipo(int equipo_id) async {
@@ -42,25 +43,20 @@ class HttpService {
 
     if (respuesta.statusCode == 200) {
       return json.decode(respuesta.body);
+    } else {
+      print('Error: ${respuesta.statusCode}');
+      throw Exception('Error al obtener jugadores por equipo: ${respuesta.statusCode}');
     }
-    
-    print(respuesta.statusCode);
-    return [];
   }
-<<<<<<< HEAD
-  
-   Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
-=======
 
   Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
->>>>>>> 076a59c702975e36b1f998fa1502b7c43a285b5e
     var respuesta = await http.get(Uri.parse('$apiUrl/campeonatos/$campeonato_id'));
     if (respuesta.statusCode == 200) {
       var jsonData = json.decode(respuesta.body);
       return jsonData['nombre'] ?? 'Nombre no disponible';
     } else {
       print('Error: ${respuesta.statusCode}');
-      return 'Nombre no disponible';
+      throw Exception('Error al obtener nombre del campeonato: ${respuesta.statusCode}');
     }
   }
 
@@ -70,7 +66,7 @@ class HttpService {
       return List<Map<String, dynamic>>.from(json.decode(respuesta.body));
     } else {
       print('Error: ${respuesta.statusCode}');
-      return [];
+      throw Exception('Error al obtener resultados de partidos: ${respuesta.statusCode}');
     }
   }
 
@@ -81,22 +77,57 @@ class HttpService {
       return jsonData['nombre'] ?? 'Nombre no disponible';
     } else {
       print('Error: ${respuesta.statusCode}');
-      return 'Nombre no disponible';
+      throw Exception('Error al obtener nombre del equipo: ${respuesta.statusCode}');
     }
   }
 
   Future<Map<String, dynamic>> equiposAgregar(String nombre, String descripcion) async {
-    final url = Uri.parse('$apiUrl/equipos');
+  if (nombre.isEmpty || descripcion.isEmpty) {
+    return {'error': 'Los campos nombre y descripción no pueden estar vacíos'};
+  }
+
+  final url = Uri.parse('$apiUrl/equipos');
+  final response = await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'nombre': nombre,
+      'descripcion': descripcion,
+    }),
+  );
+
+  return _procesarRespuesta(response);
+}
+
+
+  Future<Map<String, dynamic>> campeonatosAgregar(String nombre, String juego, String reglas, String premios) async {
+    final url = Uri.parse('$apiUrl/campeonatos');
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'nombre': nombre,
-        'descripcion': descripcion,
+        'juego': juego,
+        'reglas': reglas,
+        'premios': premios,
       }),
     );
 
+    return _procesarRespuesta(response);
+  }
+
+  Future<Map<String, dynamic>> obtenerEquipo(int equipoId) async {
+    final response = await http.get(Uri.parse('$apiUrl/equipos/$equipoId'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      print('Error: ${response.statusCode}');
+      throw Exception('Error al obtener equipo: ${response.statusCode}');
+    }
+  }
+
+  Map<String, dynamic> _procesarRespuesta(http.Response response) {
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         return jsonDecode(response.body);
@@ -117,20 +148,28 @@ class HttpService {
       }
     }
   }
-<<<<<<< HEAD
+  Future<Map<String, dynamic>> editarEquipo(int id, String nombre, String descripcion) async {
+    final String url = '$apiUrl/equipos/$id';
+  
+    final Map<String, String> body = {
+      'nombre': nombre,
+      'descripcion': descripcion,
+    };
 
-  Future<Map<String, dynamic>> obtenerEquipo(int equipoId) async {
-    final response = await http.get(Uri.parse('$apiUrl/equipos/$equipoId'));
+    final http.Response response = await http.put(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(body),
+    );
+
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return jsonDecode(response.body);
     } else {
-      throw Exception('');
+      throw Exception('Error al editar el equipo: ${response.statusCode}');
     }
   }
 
 
-
 }
-=======
-}
->>>>>>> 076a59c702975e36b1f998fa1502b7c43a285b5e

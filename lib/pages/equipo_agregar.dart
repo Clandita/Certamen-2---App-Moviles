@@ -55,7 +55,7 @@ class _EquipoAgregarState extends State<EquipoAgregar> {
                 ),
                 child: Text("Agregar equipo"),
                 onPressed: () async {
-                  var respuesta = await HttpService().EquiposAgregar(
+                  var respuesta = await HttpService().equiposAgregar(
                     nombreController.text,
                     descripcionController.text,
                   );
