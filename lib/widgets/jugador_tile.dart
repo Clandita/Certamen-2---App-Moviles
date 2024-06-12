@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/editar_jugador.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 class JugadorTile extends StatefulWidget {
   
   final String rut;
@@ -14,6 +16,44 @@ class JugadorTile extends StatefulWidget {
 }
 
 class _JugadorTileState extends State<JugadorTile> {
+
+  late String nombre;
+  late String apellido;
+  late String nickname;
+
+  @override
+  void initState() {
+    super.initState();
+    nombre = widget.nombre;
+    apellido = widget.apellido;
+    nickname = widget.nickname;
+  }
+
+  void editarJugador() async {
+    final updatedData = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditarJugadorPage(
+          rut: widget.rut,
+          nombre: nombre,
+          apellido: apellido,
+          nickname: nickname,
+        ),
+      ),
+    );
+
+    if (updatedData != null) {
+      setState(() {
+        nombre = updatedData['nombre'];
+        apellido = updatedData['apellido'];
+        nickname = updatedData['nickname'];
+      });
+    }
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,6 +83,28 @@ class _JugadorTileState extends State<JugadorTile> {
               )
             ],
           )),
+
+        Container(
+          color:Color.fromRGBO(158, 158, 158, 0.8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(MdiIcons.instagram),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(MdiIcons.facebook),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(MdiIcons.youtube),
+              )
+            ],
+          ),
+        ),
+
         Container(
           decoration: BoxDecoration(
             color: Colors.black,
@@ -63,8 +125,20 @@ class _JugadorTileState extends State<JugadorTile> {
               Text('${this.widget.nickname}',style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))),
             ],
           )),
+          Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: editarJugador,
+                icon: Icon(MdiIcons.humanEdit)),
+            ],
+          ),
+        ),
       ],),
     );
-    
+  
+  
   }
+  
 }

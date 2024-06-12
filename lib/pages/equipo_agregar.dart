@@ -25,7 +25,7 @@ class _EquipoAgregarState extends State<EquipoAgregar> {
         padding: EdgeInsets.all(8),
         child: ListView(
           children: [
-            Text("Agregar nombre:"),
+            Text("Nombre Equipo:"),
             TextFormField(
               decoration: InputDecoration(labelText: "Nombre"),
               controller: nombreController,
@@ -34,7 +34,7 @@ class _EquipoAgregarState extends State<EquipoAgregar> {
               errNombre,
               style: TextStyle(color: Colors.red),
             ),
-            Text("Agregar descripción:"),
+            Text("Descripción equipo:"),
             TextFormField(
               decoration: InputDecoration(labelText: "Descripción"),
               controller: descripcionController,
