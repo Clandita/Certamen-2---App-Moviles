@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -12,6 +11,7 @@ class HttpService {
   Future<List<dynamic>> equipos() async {
     return listarDatos('equipos');
   }
+
   Future<List<dynamic>> partidos() async {
     return listarDatos('partidos');
   }
@@ -33,7 +33,6 @@ class HttpService {
       return json.decode(respuesta.body);
     }
     
-
     print(respuesta.statusCode);
     return [];
   }
@@ -45,15 +44,14 @@ class HttpService {
       return json.decode(respuesta.body);
     }
     
-
     print(respuesta.statusCode);
     return [];
   }
-   Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
+
+  Future<String> obtenerNombreCampeonatoPorId(int campeonato_id) async {
     var respuesta = await http.get(Uri.parse('$apiUrl/campeonatos/$campeonato_id'));
     if (respuesta.statusCode == 200) {
       var jsonData = json.decode(respuesta.body);
-      // Asumimos que el nombre del campeonato está en el campo 'nombre'
       return jsonData['nombre'] ?? 'Nombre no disponible';
     } else {
       print('Error: ${respuesta.statusCode}');
@@ -81,7 +79,8 @@ class HttpService {
       return 'Nombre no disponible';
     }
   }
-  Future<Map<String, dynamic>> EquiposAgregar(String nombre, String descripcion) async {
+
+  Future<Map<String, dynamic>> equiposAgregar(String nombre, String descripcion) async {
     final url = Uri.parse('$apiUrl/equipos');
 
     final response = await http.post(
@@ -113,6 +112,4 @@ class HttpService {
       }
     }
   }
-
-
 }
