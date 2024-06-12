@@ -15,7 +15,7 @@ class _PartidosCampeonatoState extends State<PartidosCampeonato> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Resultados'),
+        title: Text('Partidos del campeonato'),
       ),
       body: Center(
         child: FutureBuilder(

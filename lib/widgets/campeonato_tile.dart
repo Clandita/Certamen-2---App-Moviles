@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/editar_campeonato.dart';
 import 'package:flutter_application_1/pages/equipos_en_campeonato.dart';
 import 'package:flutter_application_1/pages/partidos.dart';
 import 'package:flutter_application_1/service/http_service.dart';
@@ -20,28 +21,13 @@ class CampeonatoTile extends StatefulWidget {
 
 class _CampeonatoTileState extends State<CampeonatoTile> {
   final HttpService httpService = HttpService();
+  late TextEditingController idController;
 
-  Future<void> _eliminarCampeonato(int id) async {
-    try {
-      final response = await httpService.eliminarCampeonato(id);
-      if (response['message'] == 'Success') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Campeonato eliminado exitosamente'))
-        );
-        setState(() {
-          // Aquí debes definir cómo deseas actualizar la interfaz de usuario
-          // Por ejemplo, eliminando el elemento de una lista de campeonatos
-        });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al eliminar el campeonato: ${response['errors']}'))
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al eliminar el campeonato: $e'))
-      );
-    }
+
+ @override
+  void initState() {
+    super.initState();
+    idController=TextEditingController(text: widget.id.toString());
   }
 
   @override
@@ -138,13 +124,40 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   padding: EdgeInsets.all(10),
                   child: IconButton(
                     onPressed: () {
-                      _eliminarCampeonato(widget.id);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditarCampeonatoPage(
+                            id: widget.id,
+                            nombre: widget.nombre,
+                            juego: widget.juego,
+                            reglas: widget.reglas,
+                            premios: widget.premios)
+                        ),
+                      );
+                    },
+                    icon: Icon(MdiIcons.bookEdit),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: IconButton(
+                    onPressed: () async {
+                      var respuesta= await HttpService().deleteCampeonato(
+                    int.parse(idController.text)
+               
+                );
+                if(respuesta=='Error'){
+                  print("nooo");
+                }else{
+                  setState(() {});
+                }
                     },
                     icon: Icon(MdiIcons.delete),
                   ),

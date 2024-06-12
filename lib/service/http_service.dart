@@ -180,7 +180,52 @@ class HttpService {
       );
       return json.decode(response.body);}
 
+    Future<String> deleteJugador(String rut) async {
+    var url=Uri.parse('$apiUrl/jugadores/?rut=$rut');
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      
+      );
+      return response.body;
+      }
 
+
+  Future<Map<String, dynamic>> updateCampeonato(int id, String nombre, String juego, String reglas, String premios) async {
+
+    var url = Uri.parse('$apiUrl/campeonatos/$id');
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      body: json.encode(<String, dynamic>{
+        'nombre': nombre,
+        'juego': juego,
+        'reglas': reglas,
+        'premios': premios
+      }),
+    );
+
+    return json.decode(response.body);
+    }
+
+    Future<String> deleteCampeonato(int id) async {
+    var url=Uri.parse('$apiUrl/campeonatos/$id');
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      
+      );
+      return response.body;
+      }
 
 
 

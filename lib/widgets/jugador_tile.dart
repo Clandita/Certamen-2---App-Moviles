@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/editar_jugador.dart';
+import 'package:flutter_application_1/service/http_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 class JugadorTile extends StatefulWidget {
-  
+
   final String rut;
   final String nombre;
   final String apellido;
@@ -16,7 +17,7 @@ class JugadorTile extends StatefulWidget {
 }
 
 class _JugadorTileState extends State<JugadorTile> {
-
+  late TextEditingController rutController;
   late String nombre;
   late String apellido;
   late String nickname;
@@ -24,6 +25,7 @@ class _JugadorTileState extends State<JugadorTile> {
   @override
   void initState() {
     super.initState();
+    rutController=TextEditingController(text: widget.rut);
     nombre = widget.nombre;
     apellido = widget.apellido;
     nickname = widget.nickname;
@@ -132,7 +134,17 @@ class _JugadorTileState extends State<JugadorTile> {
               IconButton(
                 onPressed: editarJugador,
                 icon: Icon(MdiIcons.humanEdit)),
-              IconButton(onPressed: (){}, icon: Icon(MdiIcons.delete))
+              IconButton(onPressed: () async{
+                var respuesta= await HttpService().deleteJugador(
+                    rutController.text
+                );
+                if(respuesta=='Error'){
+                  print("nooo");
+                }else{
+                  print('${rutController}');
+                  setState(() {});
+                }
+              }, icon: Icon(MdiIcons.delete))
             ],
           ),
         ),
