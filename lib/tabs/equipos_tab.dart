@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/editar_equipo.dart';
+
 import 'package:flutter_application_1/pages/equipo_agregar.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/equipo_tile.dart';
