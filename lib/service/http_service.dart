@@ -18,6 +18,9 @@ class HttpService {
   Future<List<dynamic>> partidos() async {
     return listarDatos('partidos');
   }
+  Future<List<dynamic>> resultados() async {
+    return listarDatos('resultados');
+  }
 
   Future<List<dynamic>> listarDatos(String coleccion) async {
     var respuesta = await http.get(Uri.parse(apiUrl + '/' + coleccion));
@@ -85,10 +88,8 @@ class HttpService {
   }
 
   Future<Map<String, dynamic>> equiposAgregar(String nombre, String descripcion) async {
-  if (nombre.isEmpty || descripcion.isEmpty) {
-    return {'error': 'Los campos nombre y descripción no pueden estar vacíos'};
-  }
-
+  print(nombre);
+  print(descripcion); 
   final url = Uri.parse('$apiUrl/equipos');
   final response = await http.post(
     url,
@@ -98,7 +99,6 @@ class HttpService {
       'descripcion': descripcion,
     }),
   );
-
   return _procesarRespuesta(response);
 }
 
