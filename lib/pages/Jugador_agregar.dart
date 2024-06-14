@@ -1,36 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 
-class CampeonatoAgregar extends StatefulWidget {
-  const CampeonatoAgregar({super.key});
+class JugadorAgregar extends StatefulWidget {
+  final int id_Equipo;
+  const JugadorAgregar({super.key, required this.id_Equipo});
 
   @override
-  State<CampeonatoAgregar> createState() => _CampeonatoAgregarState();
+  State<JugadorAgregar> createState() => _JugadorAgregarState();
 }
 
-class _CampeonatoAgregarState extends State<CampeonatoAgregar> {
+class _JugadorAgregarState extends State<JugadorAgregar> {
   TextEditingController nombreController = TextEditingController();
-  TextEditingController juegoController = TextEditingController();
-  TextEditingController reglasController = TextEditingController();
-  TextEditingController premiosController = TextEditingController();
+  TextEditingController apellidoController = TextEditingController();
+  TextEditingController rutController = TextEditingController();
+  TextEditingController nicknameController = TextEditingController();
 
   String errNombre = "";
-  String errJuego = "";
-  String errReglas = "";
-  String errPremios = "";
+  String errApellido = "";
+  String errNickname = "";
+  String errRut = "";
   String errGeneral = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Agregar Nuevo campeonato"),
+        title: Text("Agregar Nuevo jugador"),
       ),
       body: Padding(
         padding: EdgeInsets.all(8),
         child: ListView(
           children: [
-            Text("Agregar nombre:"),
+            Text("Nombre:"),
             TextFormField(
               decoration: InputDecoration(labelText: "Nombre"),
               controller: nombreController,
@@ -39,62 +40,62 @@ class _CampeonatoAgregarState extends State<CampeonatoAgregar> {
               errNombre,
               style: TextStyle(color: Colors.red),
             ),
-            Text("Agregar que juego es:"),
+            Text("Apellido:"),
             TextFormField(
-              decoration: InputDecoration(labelText: "Juego"),
-              controller: juegoController,
+              decoration: InputDecoration(labelText: "Apellido"),
+              controller: apellidoController,
             ),
             Text(
-              errJuego,
+              errApellido,
               style: TextStyle(color: Colors.red),
             ),
-            Text("Reglas:"),
+            Text("RUT:"),
             TextFormField(
-              decoration: InputDecoration(labelText: "Reglas"),
-              controller: reglasController,
+              decoration: InputDecoration(labelText: "RUT"),
+              controller: rutController,
             ),
             Text(
-              errReglas,
+              errRut,
               style: TextStyle(color: Colors.red),
             ),
-            Text("Premios:"),
+            Text("Nickname:"),
             TextFormField(
-              decoration: InputDecoration(labelText: "Premios"),
-              controller: premiosController,
+              decoration: InputDecoration(labelText: "Nickname"),
+              controller: nicknameController,
             ),
             Text(
-              errPremios,
-              style: TextStyle(color: Colors.red),
-            ),
-            Text(
-              errGeneral,
+              errNickname,
               style: TextStyle(color: Colors.red),
             ),
             Container(
               margin: EdgeInsets.only(top: 20),
               child: FilledButton(
-                child: Text("Agregar Campeonato"),
+                style: FilledButton.styleFrom(
+                  backgroundColor: Color(0xff134577),
+                ),
+                child: Text("Agregar Jugador"),
                 onPressed: () async {
                   try {
                     String nombre = nombreController.text;
-                    String juego = juegoController.text;
-                    String reglas = reglasController.text;
-                    String premios = premiosController.text;
+                    String apellido = apellidoController.text;
+                    String nickname = nicknameController.text;
+                    String rut = rutController.text;
 
-                    var respuesta = await HttpService().campeonatosAgregar(
+                    var respuesta = await HttpService().jugadorAgregar(
                       nombre,
-                      juego,
-                      reglas,
-                      premios,
+                      apellido,
+                      rut,
+                      nickname,
+                      widget.id_Equipo,
                     );
 
                     if (respuesta['message'] == 'Error') {
                       var errores = respuesta['errors'];
                       setState(() {
                         errNombre = errores['nombre'] != null ? errores['nombre'][0] : "";
-                        errJuego = errores['juego'] != null ? errores['juego'][0] : "";
-                        errReglas = errores['reglas'] != null ? errores['reglas'][0] : "";
-                        errPremios = errores['premios'] != null ? errores['premios'][0] : "";
+                        errApellido = errores['apellido'] != null ? errores['apellido'][0] : "";
+                        errNickname = errores['nickname'] != null ? errores['nickname'][0] : "";
+                        errRut = errores['rut'] != null ? errores['rut'][0] : "";
                         errGeneral = errores['general'] != null ? errores['general'][0] : "";
                       });
                     } else {
@@ -107,7 +108,7 @@ class _CampeonatoAgregarState extends State<CampeonatoAgregar> {
                   }
                 },
               ),
-            )
+            ),
           ],
         ),
       ),

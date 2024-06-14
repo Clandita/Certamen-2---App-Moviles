@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/Jugador_agregar.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/jugador_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
-class EquipoPerfil extends StatelessWidget {
+class EquipoPerfil extends StatefulWidget {
   final int equipo_id;
   const EquipoPerfil({required this.equipo_id});
 
+  @override
+  State<EquipoPerfil> createState() => _EquipoPerfilState();
+}
+
+class _EquipoPerfilState extends State<EquipoPerfil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: FutureBuilder(
-          future: HttpService().obtenerEquipo(equipo_id),
+          future: HttpService().obtenerEquipo(widget.equipo_id),
           builder: (context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
             if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -20,8 +26,9 @@ class EquipoPerfil extends StatelessWidget {
           },
         ),
       ),
+      
       body: FutureBuilder(
-        future: HttpService().jugadoresPorEquipo(equipo_id),
+        future: HttpService().jugadoresPorEquipo(widget.equipo_id),
         builder: (context, AsyncSnapshot snapshot) {
           if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -41,6 +48,20 @@ class EquipoPerfil extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color:Colors.white
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        backgroundColor: Color(0xff142157),
+        onPressed: (){
+          MaterialPageRoute ruta =MaterialPageRoute(
+            builder:(context)=>JugadorAgregar(id_Equipo: widget.equipo_id,),
+            );
+          Navigator.push(context,ruta).then((value){setState((){});});
+        })    
+      
     );
   }
 }

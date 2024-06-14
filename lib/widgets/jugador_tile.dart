@@ -42,7 +42,9 @@ class _JugadorTileState extends State<JugadorTile> {
           nickname: nickname,
         ),
       ),
-    );
+    ).then((value){setState(() {
+      
+    });});
 
     if (updatedData != null) {
       setState(() {

@@ -286,8 +286,42 @@ class HttpService {
     return _procesarRespuesta(response);
   }
 
+  Future<Map<String, dynamic>> jugadorAgregar(String nombre, String apellido, String rut, String nickname, int equipo_id) async {
+    final url = Uri.parse('$apiUrl/jugadores');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'nombre': nombre,
+        'apellido': apellido,
+        'rut': rut,
+        'nickname': nickname,
+        'equipo_id': equipo_id,
+      }),
+    );
 
+    return _procesarRespuesta(response);
+  }
   
+Future<Map<String, dynamic>> agregarEquipoACampeonato(int equipoId, int campeonatoId) async {
+  print(equipoId);
+  print(campeonatoId);
+    final response = await http.post(
+      Uri.parse('$apiUrl/campeonatoequipo'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'equipo_id': equipoId,
+        'campeonato_id': campeonatoId,
+      }),
+    );
 
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return {'message': 'Error', 'errors': jsonDecode(response.body)};
+    }
+  }
 
 }

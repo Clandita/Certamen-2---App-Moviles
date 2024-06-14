@@ -75,8 +75,12 @@ class _EditarJugadorPageState extends State<EditarJugadorPage> {
                     print('nooo');
                     
                   } else {
-                    setState(() {});
-                    Navigator.pop(context);
+                    Navigator.pop(context, {
+                    'rut': rutController.text,
+                    'nombre': nombreController.text,
+                    'apellido': apellidoController.text,
+                    'nickname': nicknameController.text,
+                  });
                   }
                 },
               child: Text('Guardar', style:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black))),

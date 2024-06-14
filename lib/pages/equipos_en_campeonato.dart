@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/agregar_equipos_en_campeonato.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/equipo_tile.dart';
 
-class EquiposCampeonato extends StatelessWidget {
+class EquiposCampeonato extends StatefulWidget {
   final int campeonato_Id;
 
   const EquiposCampeonato({required this.campeonato_Id});
 
+  @override
+  State<EquiposCampeonato> createState() => _EquiposCampeonatoState();
+}
+
+class _EquiposCampeonatoState extends State<EquiposCampeonato> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +25,7 @@ class EquiposCampeonato extends StatelessWidget {
           color: Colors.grey
         ),
         child: FutureBuilder(
-          future: HttpService().obtenerEquiposPorCampeonato(campeonato_Id),
+          future: HttpService().obtenerEquiposPorCampeonato(widget.campeonato_Id),
           builder: (context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -41,11 +47,24 @@ class EquiposCampeonato extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.add,
-          color:Colors.white
+          color: Colors.white,
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         backgroundColor: Color(0xff142157),
-        onPressed: (){})
+        onPressed: () async {
+          final selectedEquipoId = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AgregarEquiposEnCampeonato(campeonatoId: widget.campeonato_Id),
+            ),
+          );
+
+          if (selectedEquipoId != null) {
+            // Recargar los equipos del campeonato
+            setState(() {});
+          }
+        },
+      ),
     );
   }
 }
