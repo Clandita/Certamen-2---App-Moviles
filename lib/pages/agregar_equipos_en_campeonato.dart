@@ -7,14 +7,12 @@ class AgregarEquiposEnCampeonato extends StatefulWidget {
   const AgregarEquiposEnCampeonato({required this.campeonatoId});
 
   @override
-  _AgregarEquiposEnCampeonatoState createState() =>
-      _AgregarEquiposEnCampeonatoState();
+  _AgregarEquiposEnCampeonatoState createState() => _AgregarEquiposEnCampeonatoState();
 }
 
-class _AgregarEquiposEnCampeonatoState
-    extends State<AgregarEquiposEnCampeonato> {
+class _AgregarEquiposEnCampeonatoState extends State<AgregarEquiposEnCampeonato> {
   List<dynamic> equipos = [];
-  String? selectedEquipoId;
+  int? selectedEquipoId;
 
   String errEquipoId = "";
   String errGeneral = "";
@@ -27,9 +25,10 @@ class _AgregarEquiposEnCampeonatoState
 
   Future<void> cargarEquipos() async {
     try {
-      var equiposList = await HttpService().equipos();
+      var equiposList = await HttpService().equiposNoEnCampeonato(widget.campeonatoId);
       setState(() {
         equipos = equiposList;
+        print('Equipos cargados: $equipos');
       });
     } catch (e) {
       print('Error al cargar equipos: $e');
@@ -47,23 +46,26 @@ class _AgregarEquiposEnCampeonatoState
       ),
       body: Padding(
         padding: EdgeInsets.all(8),
-        child: ListView(
+        child: Column(
           children: [
-            Text("Equipo:"),
-            DropdownButtonFormField<String>(
-              decoration: InputDecoration(labelText: "Equipo"),
-              items: equipos.map((equipo) {
-                return DropdownMenuItem<String>(
-                  value: equipo['id'].toString(),
-                  child: Text(equipo['nombre']),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedEquipoId = value;
-                });
-              },
-              value: selectedEquipoId,
+            Text("Seleccione un equipo para agregar al campeonato:"),
+            Expanded(
+              child: ListView.builder(
+                itemCount: equipos.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(equipos[index]['nombre']),
+                    onTap: () {
+                      setState(() {
+                        selectedEquipoId = equipos[index]['id'] as int;
+                        print('Equipo seleccionado ID: $selectedEquipoId');
+                      });
+                    },
+                    selected: selectedEquipoId == equipos[index]['id'],
+                    selectedTileColor: Colors.blue[100],
+                  );
+                },
+              ),
             ),
             Text(
               errEquipoId,
@@ -78,19 +80,20 @@ class _AgregarEquiposEnCampeonatoState
                 child: Text("Agregar Equipo"),
                 onPressed: () async {
                   try {
-                    String? equipoId = selectedEquipoId;
+                    var equipoId = selectedEquipoId;
 
                     if (equipoId == null) {
                       setState(() {
                         errEquipoId = 'Debe seleccionar un equipo';
                       });
-                      return ;
+                      return;
                     }
 
-                    var respuesta = await HttpService().agregarEquipoACampeonato(
-                      int.parse(equipoId),
-                      widget.campeonatoId,
+                    var respuesta = await HttpService().AgregarEquiposEnCampeonato(
+                      equipoId.toString(),
+                      widget.campeonatoId.toString(),
                     );
+
 
                     if (respuesta['message'] == 'Error') {
                       var errores = respuesta['errors'];
@@ -104,6 +107,7 @@ class _AgregarEquiposEnCampeonatoState
                   } catch (e) {
                     setState(() {
                       errGeneral = 'Error en el formato de entrada: ${e.toString()}';
+                      print('Error durante la solicitud: $e');
                     });
                   }
                 },

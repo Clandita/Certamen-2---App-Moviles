@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:convert';
+import 'package:flutter_application_1/pages/agregar_equipos_en_campeonato.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -9,10 +10,6 @@ class HttpService {
 
   Future<List<dynamic>> campeonatos() async {
     return listarDatos('campeonatos');
-  }
-
-  Future<List<dynamic>> equipos() async {
-    return listarDatos('equipos');
   }
 
   Future<List<dynamic>> partidos() async {
@@ -230,38 +227,25 @@ class HttpService {
 
 
 
-    Map<String, dynamic> _procesarRespuesta(http.Response response) {
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      try {
-        if (response.body.isEmpty) {
-          return {'message': 'Success', 'data': 'Respuesta vacía del servidor'};
-        }
-        return jsonDecode(response.body);
-      } catch (e) {
-        print('Error al decodificar la respuesta: $e');
-        return {'message': 'Success', 'data': response.body};
-      }
-    } else {
-      try {
-        return {
-          'message': 'Error',
-          'errors': jsonDecode(response.body)['errors']
-        };
-      } catch (e) {
-        print('Error al procesar la respuesta de error: $e');
-        return {
-          'message': 'Error',
-          'errors': {'general': ['Respuesta no válida del servidor']}
-        };
-      }
+  Map<String, dynamic> _procesarRespuesta(http.Response response) {
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    return jsonDecode(response.body);
+  } else {
+    try {
+      return {
+        'message': 'Error',
+        'errors': jsonDecode(response.body)['errors']
+      };
+    } catch (e) {
+      print('Error al procesar la respuesta de error: $e');
+      return {
+        'message': 'Error',
+        'errors': {'general': ['Respuesta no válida del servidor']}
+      };
     }
   }
-  Future<Map<String, dynamic>> eliminarCampeonato(int id) async {
-    final url = Uri.parse('$apiUrl/campeonatos/$id');
-    final response = await http.delete(url);
+}
 
-    return _procesarRespuesta(response);
-  }
 
 
 
@@ -302,26 +286,39 @@ class HttpService {
 
     return _procesarRespuesta(response);
   }
-  
-Future<Map<String, dynamic>> agregarEquipoACampeonato(int equipoId, int campeonatoId) async {
-  print(equipoId);
-  print(campeonatoId);
+  Future<Map<String, dynamic>> AgregarEquiposEnCampeonato(String equipo_id, String campeonato_id) async {
+    final url = Uri.parse('$apiUrl/campeonatoequipo');
     final response = await http.post(
-      Uri.parse('$apiUrl/campeonatoequipo'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'equipo_id': equipoId,
-        'campeonato_id': campeonatoId,
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'posicion':0,
+        'equipo_id': equipo_id,
+        'campeonato_Id': campeonato_id,
       }),
     );
 
+    return _procesarRespuesta(response);
+  }
+  Future<List<dynamic>> equiposNoEnCampeonato(int campeonatoId) async {
+    final response = await http.get(Uri.parse('$apiUrl/campeonatos/$campeonatoId/equipos/no'));
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al cargar los equipos');
+    }
+  }
+
+
+  Future<List<dynamic>> equipos() async {
+    final response = await http.get(Uri.parse('$apiUrl/equipos'));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      return {'message': 'Error', 'errors': jsonDecode(response.body)};
+      throw Exception('Error al cargar los equipos');
     }
   }
+
 
 }
