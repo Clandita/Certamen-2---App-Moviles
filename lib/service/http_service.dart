@@ -1,6 +1,5 @@
 import 'dart:collection';
 import 'dart:convert';
-import 'package:flutter_application_1/pages/agregar_equipos_en_campeonato.dart';
 import 'package:http/http.dart' as http;
 
 

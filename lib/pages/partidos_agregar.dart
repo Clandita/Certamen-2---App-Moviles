@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/Jugador_agregar.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 
 class PartidosAgregar extends StatefulWidget {
