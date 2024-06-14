@@ -78,42 +78,90 @@ class _PartidosAgregarState extends State<PartidosAgregar> {
                 ),
                 child: Text("Agregar Partido"),
                 onPressed: () async {
-                  try {
-                    DateTime hora = DateTime.parse(horaController.text);
-                    bool jugado = jugadoController.text.toLowerCase() == 'true';
-                    int campeonatoId = int.parse(idcampeonatoController.text);
-                    var respuesta = await HttpService().partidosAgregar(
-                      hora.toIso8601String(),
-                      jugado,
-                      lugarController.text,
-                      campeonatoId,
-                    );
-                    if (respuesta['message'] == 'Error') {
-                      var errores = respuesta['errors'];
+                  if (_validateFields()) {
+                    try {
+                      DateTime hora = DateTime.parse(horaController.text);
+                      bool jugado = jugadoController.text.toLowerCase() == 'true';
+                      int campeonatoId = int.parse(idcampeonatoController.text);
+                      var respuesta = await HttpService().partidosAgregar(
+                        hora.toIso8601String(),
+                        jugado,
+                        lugarController.text,
+                        campeonatoId,
+                      );
+                      if (respuesta['message'] == 'Error') {
+                        var errores = respuesta['errors'];
+                        setState(() {
+                          errHora = errores['hora'] != null ? errores['hora'][0] : "";
+                          errJugado = errores['jugado'] != null ? errores['jugado'][0] : "";
+                          errLugar = errores['lugar'] != null ? errores['lugar'][0] : "";
+                          errIdCampeonato = errores['campeonato_id'] != null ? errores['campeonato_id'][0] : "";
+                          errGeneral = errores['general'] != null ? errores['general'][0] : "";
+                        });
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    } catch (e) {
                       setState(() {
-                        errHora = errores['hora'] != null ? errores['hora'][0] : "";
-                        errJugado = errores['jugado'] != null ? errores['jugado'][0] : "";
-                        errLugar = errores['lugar'] != null ? errores['lugar'][0] : "";
-                        errIdCampeonato = errores['campeonato_id'] != null ? errores['campeonato_id'][0] : "";
-                        errGeneral = errores['general'] != null ? errores['general'][0] : "";
+                        errGeneral = 'Error en el formato de entrada: ${e.toString()}';
                       });
-                    } else {
-                      Navigator.pop(context);
                     }
-                  } catch (e) {
-                    setState(() {
-                      errGeneral = 'Error en el formato de entrada: ${e.toString()}';
-                    });
                   }
                 },
               ),
             ),
-            
           ],
         ),
       ),
-      
     );
-    
+  }
+
+  bool _validateFields() {
+    bool isValid = true;
+    if (horaController.text.isEmpty) {
+      setState(() {
+        errHora = 'Campo requerido';
+      });
+      isValid = false;
+    } else {
+      setState(() {
+        errHora = '';
+      });
+    }
+
+    if (jugadoController.text.isEmpty) {
+      setState(() {
+        errJugado = 'Campo requerido';
+      });
+      isValid = false;
+    } else {
+      setState(() {
+        errJugado = '';
+      });
+    }
+
+    if (lugarController.text.isEmpty) {
+      setState(() {
+        errLugar = 'Campo requerido';
+      });
+      isValid = false;
+    } else {
+      setState(() {
+        errLugar = '';
+      });
+    }
+
+    if (idcampeonatoController.text.isEmpty) {
+      setState(() {
+        errIdCampeonato = 'Campo requerido';
+      });
+      isValid = false;
+    } else {
+      setState(() {
+        errIdCampeonato = '';
+      });
+    }
+
+    return isValid;
   }
 }

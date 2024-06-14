@@ -3,7 +3,8 @@ import 'package:flutter_application_1/service/http_service.dart';
 
 class JugadorAgregar extends StatefulWidget {
   final int id_Equipo;
-  const JugadorAgregar({super.key, required this.id_Equipo});
+
+  const JugadorAgregar({Key? key, required this.id_Equipo}) : super(key: key);
 
   @override
   State<JugadorAgregar> createState() => _JugadorAgregarState();
@@ -31,56 +32,73 @@ class _JugadorAgregarState extends State<JugadorAgregar> {
         padding: EdgeInsets.all(8),
         child: ListView(
           children: [
-            Text("Nombre:"),
-            TextFormField(
-              decoration: InputDecoration(labelText: "Nombre"),
+            _buildTextField(
+              label: "Nombre:",
               controller: nombreController,
+              errorText: errNombre,
+              onChanged: (value) {
+                setState(() {
+                  errNombre = value.isEmpty ? "Ingrese un nombre" : "";
+                });
+              },
             ),
-            Text(
-              errNombre,
-              style: TextStyle(color: Colors.red),
-            ),
-            Text("Apellido:"),
-            TextFormField(
-              decoration: InputDecoration(labelText: "Apellido"),
+            _buildTextField(
+              label: "Apellido:",
               controller: apellidoController,
+              errorText: errApellido,
+              onChanged: (value) {
+                setState(() {
+                  errApellido = value.isEmpty ? "Ingrese un apellido" : "";
+                });
+              },
             ),
-            Text(
-              errApellido,
-              style: TextStyle(color: Colors.red),
-            ),
-            Text("RUT:"),
-            TextFormField(
-              decoration: InputDecoration(labelText: "RUT"),
+            _buildTextField(
+              label: "RUT:",
               controller: rutController,
+              errorText: errRut,
+              onChanged: (value) {
+                setState(() {
+                  errRut = value.isEmpty ? "Ingrese un RUT" : "";
+                });
+              },
             ),
-            Text(
-              errRut,
-              style: TextStyle(color: Colors.red),
-            ),
-            Text("Nickname:"),
-            TextFormField(
-              decoration: InputDecoration(labelText: "Nickname"),
+            _buildTextField(
+              label: "Nickname:",
               controller: nicknameController,
-            ),
-            Text(
-              errNickname,
-              style: TextStyle(color: Colors.red),
+              errorText: errNickname,
+              onChanged: (value) {
+                setState(() {
+                  errNickname = value.isEmpty ? "Ingrese un nickname" : "";
+                });
+              },
             ),
             Container(
               margin: EdgeInsets.only(top: 20),
-              child: FilledButton(
-                style: FilledButton.styleFrom(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xff134577),
                 ),
-                child: Text("Agregar Jugador"),
                 onPressed: () async {
-                  try {
-                    String nombre = nombreController.text;
-                    String apellido = apellidoController.text;
-                    String nickname = nicknameController.text;
-                    String rut = rutController.text;
+                  setState(() {
+                    errGeneral = "";
+                  });
 
+                  String nombre = nombreController.text.trim();
+                  String apellido = apellidoController.text.trim();
+                  String nickname = nicknameController.text.trim();
+                  String rut = rutController.text.trim();
+
+                  if (nombre.isEmpty || apellido.isEmpty || nickname.isEmpty || rut.isEmpty) {
+                    setState(() {
+                      errNombre = nombre.isEmpty ? "Ingrese un nombre" : "";
+                      errApellido = apellido.isEmpty ? "Ingrese un apellido" : "";
+                      errNickname = nickname.isEmpty ? "Ingrese un nickname" : "";
+                      errRut = rut.isEmpty ? "Ingrese un RUT" : "";
+                    });
+                    return;
+                  }
+
+                  try {
                     var respuesta = await HttpService().jugadorAgregar(
                       nombre,
                       apellido,
@@ -107,11 +125,43 @@ class _JugadorAgregarState extends State<JugadorAgregar> {
                     });
                   }
                 },
+                child: Text("Agregar Jugador"),
               ),
             ),
+            if (errGeneral.isNotEmpty)
+              Text(
+                errGeneral,
+                style: TextStyle(color: Colors.red),
+              ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required String errorText,
+    required ValueChanged<String> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: label,
+            errorText: errorText.isNotEmpty ? errorText : null,
+          ),
+          controller: controller,
+          onChanged: onChanged,
+        ),
+        SizedBox(height: 8),
+      ],
     );
   }
 }

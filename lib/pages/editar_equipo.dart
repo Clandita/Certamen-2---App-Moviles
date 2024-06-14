@@ -3,30 +3,31 @@ import 'package:flutter_application_1/service/http_service.dart';
 
 class EquipoEditar extends StatefulWidget {
   final int id;
-  final String nombre;
-  final String descripcion;
+  String nombre;
+  String descripcion;
 
-
-  EquipoEditar({required this.id, required this.nombre, required this.descripcion});
+  EquipoEditar({
+    required this.id,
+    required this.nombre,
+    required this.descripcion,
+  });
 
   @override
   State<EquipoEditar> createState() => _EquipoEditarState();
 }
 
 class _EquipoEditarState extends State<EquipoEditar> {
-  late TextEditingController idController;
   late TextEditingController nombreController;
   late TextEditingController descripcionController;
-  
+  String errNombre = "";
+  String errDescripcion = "";
 
   @override
   void initState() {
     super.initState();
-    idController=TextEditingController(text: widget.id.toString());
     nombreController = TextEditingController(text: widget.nombre);
     descripcionController = TextEditingController(text: widget.descripcion);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,43 +40,92 @@ class _EquipoEditarState extends State<EquipoEditar> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            TextField(
+            _buildTextField(
+              label: 'Nombre del Equipo',
               controller: nombreController,
-              decoration: InputDecoration(
-                labelText: 'Nombre del Equipo',
-              ),
+              errorText: errNombre,
+              onChanged: (value) {
+                setState(() {
+                  errNombre = value.isEmpty ? 'Ingrese un nombre' : '';
+                });
+              },
             ),
             SizedBox(height: 20),
-            TextField(
+            _buildTextField(
+              label: 'Descripción del Equipo',
               controller: descripcionController,
-              decoration: InputDecoration(
-                labelText: 'Descripción del Equipo',
-              ),
+              errorText: errDescripcion,
+              onChanged: (value) {
+                setState(() {
+                  errDescripcion = value.isEmpty ? 'Ingrese una descripción' : '';
+                });
+              },
               maxLines: null,
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                var respuesta= await HttpService().updateEquipos(
-                  int.parse(idController.text), 
-                  nombreController.text, 
-                  descripcionController.text,
-                );
-                if(respuesta=='Error'){
-                  print("nooo");
-                }else{
-                  print('ID : ${idController.text}');
+                setState(() {
+                  errNombre = nombreController.text.isEmpty ? 'Ingrese un nombre' : '';
+                  errDescripcion = descripcionController.text.isEmpty ? 'Ingrese una descripción' : '';
+                });
 
-                  Navigator.pop(context); 
-                  setState(() {});
+                if (errNombre.isEmpty && errDescripcion.isEmpty) {
+                  try {
+                    var respuesta = await HttpService().updateEquipos(
+                      widget.id,
+                      nombreController.text,
+                      descripcionController.text,
+                    );
+
+                    if (respuesta == 'Error') {
+                      print("Hubo un error al actualizar el equipo.");
+                    } else {
+                      setState(() {
+                        widget.nombre = nombreController.text;
+                        widget.descripcion = descripcionController.text;
+                      });
+
+                      Navigator.pop(context); // Volver a la pantalla anterior
+                    }
+                  } catch (e) {
+                    print('Error en la solicitud: $e');
+                  }
                 }
-            },
+              },
               child: Text('Guardar'),
             ),
-
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required String errorText,
+    required ValueChanged<String> onChanged,
+    int? maxLines,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            errorText: errorText.isNotEmpty ? errorText : null,
+          ),
+          onChanged: onChanged,
+          maxLines: maxLines,
+        ),
+        SizedBox(height: 8),
+      ],
     );
   }
 }

@@ -8,7 +8,12 @@ class EditarJugadorPage extends StatefulWidget {
   final String apellido;
   final String nickname;
 
-  const EditarJugadorPage({required this.rut, required this.nombre,required this.apellido,required this.nickname});
+  const EditarJugadorPage({
+    required this.rut,
+    required this.nombre,
+    required this.apellido,
+    required this.nickname,
+  });
 
   @override
   State<EditarJugadorPage> createState() => _EditarJugadorPageState();
@@ -20,6 +25,12 @@ class _EditarJugadorPageState extends State<EditarJugadorPage> {
   late TextEditingController apellidoController;
   late TextEditingController nicknameController;
 
+  String nombreError = '';
+  String apellidoError = '';
+  String nicknameError = '';
+  String errorMessage = '';
+  String successMessage = '';
+
   @override
   void initState() {
     super.initState();
@@ -30,64 +41,148 @@ class _EditarJugadorPageState extends State<EditarJugadorPage> {
   }
 
   @override
+  void dispose() {
+    rutController.dispose();
+    nombreController.dispose();
+    apellidoController.dispose();
+    nicknameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Jugador',style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 30, fontWeight: FontWeight.bold))),
+        title: Text(
+          'Editar Jugador',
+          style: GoogleFonts.oswald(
+            textStyle: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
+            _buildTextField(
               controller: nombreController,
-              decoration: InputDecoration(
-                labelText: 'Nombre',
-                labelStyle:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+              label: 'Nombre',
+              errorText: nombreError,
             ),
-            TextField(
+            _buildTextField(
               controller: apellidoController,
-              decoration: InputDecoration(
-                labelText: 'Apellido',
-                labelStyle:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+              label: 'Apellido',
+              errorText: apellidoError,
             ),
-            TextField(
+            _buildTextField(
               controller: nicknameController,
-              decoration: InputDecoration(
-                labelText: 'Nickname',
-                labelStyle:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+              label: 'Nickname',
+              errorText: nicknameError,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+            if (errorMessage.isNotEmpty)
+              Text(
+                errorMessage,
+                style: const TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            if (successMessage.isNotEmpty)
+              Text(
+                successMessage,
+                style: const TextStyle(color: Colors.green, fontSize: 16),
+              ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey
+                backgroundColor: Colors.grey,
               ),
               onPressed: () async {
-                  var respuesta = await HttpService().updateJugador(
-                    rutController.text,
-                    nombreController.text,
-                    apellidoController.text,
-                    nicknameController.text
-                  );
-                  print('siiii');
-                  if (respuesta == 'Error') {
-                    print('nooo');
-                    
-                  } else {
-                    Navigator.pop(context, {
+                setState(() {
+                  errorMessage = '';
+                  successMessage = '';
+                  nombreError = '';
+                  apellidoError = '';
+                  nicknameError = '';
+                });
+
+                if (nombreController.text.isEmpty) {
+                  setState(() {
+                    nombreError = 'Ingrese un nombre';
+                  });
+                  return;
+                }
+                if (apellidoController.text.isEmpty) {
+                  setState(() {
+                    apellidoError = 'Ingrese un apellido';
+                  });
+                  return;
+                }
+                if (nicknameController.text.isEmpty) {
+                  setState(() {
+                    nicknameError = 'Ingrese un nickname';
+                  });
+                  return;
+                }
+
+                var respuesta = await HttpService().updateJugador(
+                  rutController.text,
+                  nombreController.text,
+                  apellidoController.text,
+                  nicknameController.text,
+                );
+
+                if (respuesta == 'Error') {
+                  setState(() {
+                    errorMessage = 'Error al actualizar el jugador. Inténtelo de nuevo.';
+                  });
+                } else {
+                  setState(() {
+                    successMessage = 'Jugador actualizado exitosamente.';
+                  });
+                  Navigator.pop(context, {
                     'rut': rutController.text,
                     'nombre': nombreController.text,
                     'apellido': apellidoController.text,
                     'nickname': nicknameController.text,
                   });
-                  }
-                },
-              child: Text('Guardar', style:GoogleFonts.oswald(textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black))),
+                }
+              },
+              child: Text(
+                'Guardar',
+                style: GoogleFonts.oswald(
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required String errorText,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            labelText: label,
+            errorText: errorText.isNotEmpty ? errorText : null,
+            labelStyle: GoogleFonts.oswald(
+              textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+      ],
     );
   }
 }

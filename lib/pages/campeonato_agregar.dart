@@ -75,12 +75,47 @@ class _CampeonatoAgregarState extends State<CampeonatoAgregar> {
               child: FilledButton(
                 child: Text("Agregar Campeonato"),
                 onPressed: () async {
-                  try {
-                    String nombre = nombreController.text;
-                    String juego = juegoController.text;
-                    String reglas = reglasController.text;
-                    String premios = premiosController.text;
+                  setState(() {
+                    errNombre = "";
+                    errJuego = "";
+                    errReglas = "";
+                    errPremios = "";
+                    errGeneral = "";
+                  });
 
+                  String nombre = nombreController.text;
+                  String juego = juegoController.text;
+                  String reglas = reglasController.text;
+                  String premios = premiosController.text;
+
+                  bool hasError = false;
+
+                  if (nombre.isEmpty) {
+                    setState(() {
+                      errNombre = "Ingrese un nombre al campo";
+                    });
+                    hasError = true;
+                  }
+                  if (juego.isEmpty) {
+                    setState(() {
+                      errJuego = "Ingrese un juego al campo";
+                    });
+                    hasError = true;
+                  }
+                  if (reglas.isEmpty) {
+                    setState(() {
+                      errReglas = "Ingrese una regla al campo";
+                    });
+                    hasError = true;
+                  }
+                  if (premios.isEmpty) {
+                    setState(() {
+                      errPremios = "Ingrese un premio al campo";
+                    });
+                    hasError = true;
+                  }
+
+                  if (!hasError) {
                     var respuesta = await HttpService().campeonatosAgregar(
                       nombre,
                       juego,
@@ -88,22 +123,20 @@ class _CampeonatoAgregarState extends State<CampeonatoAgregar> {
                       premios,
                     );
 
-                    if (respuesta['message'] == 'Error') {
+                    if (respuesta['errors'] != null) {
                       var errores = respuesta['errors'];
                       setState(() {
-                        errNombre = errores['nombre'] != null ? errores['nombre'][0] : "";
-                        errJuego = errores['juego'] != null ? errores['juego'][0] : "";
-                        errReglas = errores['reglas'] != null ? errores['reglas'][0] : "";
-                        errPremios = errores['premios'] != null ? errores['premios'][0] : "";
-                        errGeneral = errores['general'] != null ? errores['general'][0] : "";
+                        errNombre = errores['nombre'] != null ? errores['nombre'][0] : '';
+                        errJuego = errores['juego'] != null ? errores['juego'][0] : '';
+                        errReglas = errores['reglas'] != null ? errores['reglas'][0] : '';
+                        errPremios = errores['premios'] != null ? errores['premios'][0] : '';
+                        errGeneral = errores['general'] != null ? errores['general'][0] : '';
                       });
+                      print(errNombre);
                     } else {
+                      // todo ok, volver a la pagina que lista
                       Navigator.pop(context);
                     }
-                  } catch (e) {
-                    setState(() {
-                      errGeneral = 'Error en el formato de entrada: ${e.toString()}';
-                    });
                   }
                 },
               ),

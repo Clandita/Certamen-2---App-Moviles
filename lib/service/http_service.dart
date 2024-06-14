@@ -99,14 +99,14 @@ class HttpService {
   return _procesarRespuesta(response);
 }
 
-
-  Future<Map<String, dynamic>> campeonatosAgregar(String nombre, String juego, String reglas, String premios) async {
-    final url = Uri.parse('$apiUrl/campeonatos');
-
+Future<Map<String, dynamic>> campeonatosAgregar(
+      String nombre, String juego, String reglas, String premios) async {
     final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
+      Uri.parse('$apiUrl/campeonatos'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
         'nombre': nombre,
         'juego': juego,
         'reglas': reglas,
@@ -114,7 +114,11 @@ class HttpService {
       }),
     );
 
-    return _procesarRespuesta(response);
+    if (response.statusCode == 201) {
+      return jsonDecode(response.body);
+    } else {
+      return jsonDecode(response.body);
+    }
   }
 
   Future<Map<String, dynamic>> obtenerEquipo(int equipoId) async {
