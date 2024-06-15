@@ -86,7 +86,7 @@ class _EquipoEditarState extends State<EquipoEditar> {
                         widget.descripcion = descripcionController.text;
                       });
 
-                      Navigator.pop(context); // Volver a la pantalla anterior
+                      Navigator.pop(context,true);
                     }
                   } catch (e) {
                     print('Error en la solicitud: $e');

@@ -12,8 +12,10 @@ class CampeonatoTile extends StatefulWidget {
   final String reglas;
   final String premios;
   final int id;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const CampeonatoTile({this.nombre='sin nombre', this.juego='sin juego', this.reglas='sin reglas', this.premios='sin premios', required this.id});
+  const CampeonatoTile({this.nombre='sin nombre', this.juego='sin juego', this.reglas='sin reglas', this.premios='sin premios', required this.id,required this.onEdit, required this.onDelete});
 
   @override
   State<CampeonatoTile> createState() => _CampeonatoTileState();
@@ -99,7 +101,7 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EquiposCampeonato(campeonato_Id: widget.id),
+                          builder: (context) => EquiposCampeonato(campeonato_Id: widget.id)
                         ),
                       );
                     },
@@ -124,7 +126,7 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   padding: EdgeInsets.all(10),
@@ -140,7 +142,11 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                             reglas: widget.reglas,
                             premios: widget.premios)
                         ),
-                      );
+                      ).then((value){
+                        if(value==true){
+                          widget.onEdit();
+                        }
+                      });
                     },
                     icon: Icon(MdiIcons.bookEdit),
                   ),
@@ -156,7 +162,7 @@ class _CampeonatoTileState extends State<CampeonatoTile> {
                 if(respuesta=='Error'){
                   print("nooo");
                 }else{
-                  setState(() {});
+                  widget.onDelete();
                 }
                     },
                     icon: Icon(MdiIcons.delete),

@@ -90,8 +90,8 @@ class _AgregarEquiposEnCampeonatoState extends State<AgregarEquiposEnCampeonato>
                     }
 
                     var respuesta = await HttpService().AgregarEquiposEnCampeonato(
-                      equipoId.toString(),
-                      widget.campeonatoId.toString(),
+                      equipoId,
+                      widget.campeonatoId,
                     );
 
 
@@ -102,7 +102,7 @@ class _AgregarEquiposEnCampeonatoState extends State<AgregarEquiposEnCampeonato>
                         errGeneral = errores['general'] != null ? errores['general'][0] : "";
                       });
                     } else {
-                      Navigator.pop(context);
+                      Navigator.pop(context,true);
                     }
                   } catch (e) {
                     setState(() {

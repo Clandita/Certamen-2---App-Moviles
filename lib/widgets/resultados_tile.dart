@@ -45,41 +45,41 @@ class _ResultadoTileState extends State<ResultadoTile> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
+      
       borderRadius: BorderRadius.all(Radius.circular(30)),
       child: Container(
-        margin: EdgeInsets.fromLTRB(5, 5, 5, 1),
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: const Color.fromRGBO(158, 158, 158, 0.8),
+          color: widget.ganador == 1
+              ? const Color.fromRGBO(34, 139, 34, 0.8) // Verde oscuro para ganador
+              : const Color.fromRGBO(139, 0, 0, 0.8), // Rojo oscuro para perdedor
           border: Border.all(color: Colors.black),
         ),
-        child: ExpansionTile(
-          backgroundColor: const Color.fromRGBO(158, 158, 158, 0.8),
-          title: Center(
-            child: Text(
-              'Equipo ${widget.equipo_id}',
-              style: GoogleFonts.oswald(
-                textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        child: Column(
+          children: [
+            Center(
+              child: FutureBuilder<String>(
+                future: _nombreEquipoFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return Text('Error al cargar el nombre del equipo');
+                  }
+                  return Text(
+                    snapshot.data ?? 'Nombre no encontrado',
+                    style: GoogleFonts.oswald(
+                      textStyle: TextStyle(fontSize: 40, fontWeight: FontWeight.bold,color: Colors.white),
+                    ),
+                  );
+                },
               ),
             ),
-          ),
-          children: [
-            _buildInfoRow(MdiIcons.soccer, 'Equipo ID', '${widget.equipo_id}'),
+        
             Divider(color: Colors.black),
             _buildInfoRow(MdiIcons.star, 'Puntos', '${widget.puntos}'),
-            Divider(color: Colors.black),
-            FutureBuilder<String>(
-              future: _nombreEquipoFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
-                if (snapshot.hasError) {
-                  return Text('Error al cargar el nombre del equipo');
-                }
-                return _buildInfoRow(MdiIcons.trophy, 'Equipo', snapshot.data ?? 'Nombre no encontrado');
-              },
-            ),
             Divider(color: Colors.black),
             _buildInfoRow(MdiIcons.trophy, 'Resultado', widget.ganador == 1 ? 'Ganador' : 'Perdedor'),
           ],
@@ -90,21 +90,23 @@ class _ResultadoTileState extends State<ResultadoTile> {
 
   Widget _buildInfoRow(IconData icon, String title, String value) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, size: 20),
+        Icon(icon, size: 20,color: Colors.white),
         SizedBox(width: 10),
         Text(
           title,
           style: GoogleFonts.oswald(
-            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white),
           ),
         ),
         SizedBox(width: 10),
-        Text(
-          value,
-          style: GoogleFonts.oswald(
-            textStyle: TextStyle(fontSize: 16),
+        Expanded(
+          child: Text(
+            value,
+            style: GoogleFonts.oswald(
+              textStyle: TextStyle(fontSize: 16,color: Colors.white),
+            ),
+            textAlign: TextAlign.right,
           ),
         ),
       ],

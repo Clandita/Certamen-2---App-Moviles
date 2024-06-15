@@ -17,36 +17,44 @@ class _ResultadosPartidoState extends State<ResultadosPartido> {
       appBar: AppBar(
         title: Text('Resultados'),
       ),
-      body: Center(
-        child: FutureBuilder(
-          future: HttpService().resultados(),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (!snapshot.hasData || snapshot.data.isEmpty) {
-              return Center(child: Text('No hay partidos disponibles'));
-            } else {
-              var filteredPartidos = snapshot.data.where((resultado) => resultado['partido_id'] == widget.partido_id).toList();
-
-              if (filteredPartidos.isEmpty) {
-                return Center(child: Text('No hay partidos para este campeonato'));
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/iconito.jpeg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: FutureBuilder(
+            future: HttpService().resultados(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data.isEmpty) {
+                return Center(child: Text('No hay partidos disponibles'));
+              } else {
+                var filteredPartidos = snapshot.data.where((resultado) => resultado['partido_id'] == widget.partido_id).toList();
+        
+                if (filteredPartidos.isEmpty) {
+                  return Center(child: Text('No hay partidos para este campeonato'));
+                }
+        
+                return ListView.builder(
+                  itemCount: filteredPartidos.length,
+                  itemBuilder: (context, index) {
+                    var resultado = filteredPartidos[index];
+                    return ResultadoTile(
+                      equipo_id: resultado["equipo_id"],
+                      puntos: resultado["puntos"],
+                      ganador: resultado["ganador"],
+                    );
+                  },
+                );
               }
-
-              return ListView.builder(
-                itemCount: filteredPartidos.length,
-                itemBuilder: (context, index) {
-                  var resultado = filteredPartidos[index];
-                  return ResultadoTile(
-                    equipo_id: resultado["equipo_id"],
-                    puntos: resultado["puntos"],
-                    ganador: resultado["ganador"],
-                  );
-                },
-              );
-            }
-          },
+            },
+          ),
         ),
       ),
     );

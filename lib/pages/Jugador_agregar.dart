@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/service/http_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class JugadorAgregar extends StatefulWidget {
   final int id_Equipo;
@@ -125,7 +126,8 @@ class _JugadorAgregarState extends State<JugadorAgregar> {
                     });
                   }
                 },
-                child: Text("Agregar Jugador"),
+                child: Text("Agregar Jugador", style: GoogleFonts.oswald(textStyle: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold) ))
+              
               ),
             ),
             if (errGeneral.isNotEmpty)

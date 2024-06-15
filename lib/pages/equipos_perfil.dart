@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/Jugador_agregar.dart';
+import 'package:flutter_application_1/pages/jugador_agregar.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/jugador_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,9 +12,26 @@ class EquipoPerfil extends StatefulWidget {
 }
 
 class _EquipoPerfilState extends State<EquipoPerfil> {
+    List<dynamic> jugadores = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchJugadores();
+  }
+
+  Future<void> fetchJugadores() async {
+    var jugadoresData = await HttpService().jugadores();
+    setState(() {
+      jugadores = jugadoresData;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: FutureBuilder(
           future: HttpService().obtenerEquipo(widget.equipo_id),
@@ -42,6 +59,8 @@ class _EquipoPerfilState extends State<EquipoPerfil> {
                 rut:jugador["rut"],
                 apellido:jugador["apellido"],
                 nickname:jugador["nickname"],
+                onEdit: fetchJugadores,
+                onDelete: fetchJugadores,
 
               );
             },
@@ -51,15 +70,17 @@ class _EquipoPerfilState extends State<EquipoPerfil> {
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.add,
-          color:Colors.white
+          color:Colors.black
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        backgroundColor: Color(0xff142157),
+        backgroundColor:Colors.white,
         onPressed: (){
           MaterialPageRoute ruta =MaterialPageRoute(
             builder:(context)=>JugadorAgregar(id_Equipo: widget.equipo_id,),
             );
-          Navigator.push(context,ruta).then((value){setState((){});});
+          Navigator.push(context,ruta).then((value){
+            fetchJugadores();
+          });
         })    
       
     );

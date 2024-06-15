@@ -6,6 +6,7 @@ import 'package:flutter_application_1/widgets/equipo_tile.dart';
 class EquiposCampeonato extends StatefulWidget {
   final int campeonato_Id;
 
+
   const EquiposCampeonato({required this.campeonato_Id});
 
   @override
@@ -13,6 +14,22 @@ class EquiposCampeonato extends StatefulWidget {
 }
 
 class _EquiposCampeonatoState extends State<EquiposCampeonato> {
+    List<dynamic> equipos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEquipos();
+  }
+
+  Future<void> fetchEquipos() async {
+    var equiposData = await HttpService().obtenerEquiposPorCampeonato(widget.campeonato_Id);
+    setState(() {
+      equipos = equiposData;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +55,8 @@ class _EquiposCampeonatoState extends State<EquiposCampeonato> {
                   id: equipo["id"],
                   nombre: equipo["nombre"],
                   descripcion: equipo['descripcion'],
+                  onEdit: fetchEquipos,
+                  onDelete: fetchEquipos
                 );
               },
             );
@@ -47,24 +66,16 @@ class _EquiposCampeonatoState extends State<EquiposCampeonato> {
       floatingActionButton: FloatingActionButton(
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color:Colors.white
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         backgroundColor: Color(0xff142157),
-        onPressed: () async {
-          final selectedEquipoId = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AgregarEquiposEnCampeonato(campeonatoId: widget.campeonato_Id),
-            ),
-          );
-
-          if (selectedEquipoId != null) {
-            // Recargar los equipos del campeonato
-            setState(() {});
-          }
-        },
-      ),
+        onPressed: (){
+          Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AgregarEquiposEnCampeonato(campeonatoId: widget.campeonato_Id))
+      );
+      fetchEquipos();})
     );
   }
 }

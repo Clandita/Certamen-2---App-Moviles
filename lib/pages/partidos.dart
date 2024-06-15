@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+/*import 'package:flutter_application_1/pages/partido_agregar.dart';*/
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/partido_tile.dart';
 
@@ -11,6 +12,7 @@ class PartidosCampeonato extends StatefulWidget {
 }
 
 class _PartidosCampeonatoState extends State<PartidosCampeonato> {
+  void funcionVacia (){}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +46,9 @@ class _PartidosCampeonatoState extends State<PartidosCampeonato> {
                     lugar: partido['lugar'],
                     campeonato_id: partido['campeonato_id'],
                     hora: partido['hora'],
+                    onEdit: funcionVacia,
+                    onDelete: funcionVacia,
+
                   );
                 },
               );
@@ -51,6 +56,7 @@ class _PartidosCampeonatoState extends State<PartidosCampeonato> {
           },
         ),
       ),
+      
     );
   }
 }

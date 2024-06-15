@@ -65,10 +65,13 @@ class _CampeonatosTabState extends State<CampeonatosTab> {
                           juego: campeonato['juego'],
                           reglas: campeonato['reglas'],
                           premios: campeonato['premios'],
+                          onEdit: _fetchCampeonatos,
+                          onDelete: _fetchCampeonatos,
+                          
                         );
                       },
                     ),
-            ),
+            )
           ],
         ),
       ),
@@ -84,7 +87,7 @@ class _CampeonatosTabState extends State<CampeonatosTab> {
             builder: (context) => CampeonatoAgregar(),
           );
           await Navigator.push(context, ruta);
-          _fetchCampeonatos(); // Refetch the data after returning
+          _fetchCampeonatos(); 
         },
       ),
     );

@@ -7,12 +7,14 @@ class EditarJugadorPage extends StatefulWidget {
   final String nombre;
   final String apellido;
   final String nickname;
+  final VoidCallback onEdit;
 
   const EditarJugadorPage({
     required this.rut,
     required this.nombre,
     required this.apellido,
     required this.nickname,
+    required this.onEdit
   });
 
   @override
@@ -135,14 +137,10 @@ class _EditarJugadorPageState extends State<EditarJugadorPage> {
                     errorMessage = 'Error al actualizar el jugador. Inténtelo de nuevo.';
                   });
                 } else {
+                  Navigator.pop(context, true);
                   setState(() {
+                    
                     successMessage = 'Jugador actualizado exitosamente.';
-                  });
-                  Navigator.pop(context, {
-                    'rut': rutController.text,
-                    'nombre': nombreController.text,
-                    'apellido': apellidoController.text,
-                    'nickname': nicknameController.text,
                   });
                 }
               },

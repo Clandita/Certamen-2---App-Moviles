@@ -9,6 +9,7 @@ class EditarCampeonatoPage extends StatefulWidget {
   final String reglas;
   final String premios;
 
+
   const EditarCampeonatoPage({
     required this.id,
     required this.nombre,
@@ -136,7 +137,7 @@ class _EditarCampeonatoPageState extends State<EditarCampeonatoPage> {
                       print("Hubo un error al actualizar el campeonato.");
                     } else {
                       setState(() {});
-                      Navigator.pop(context);
+                      Navigator.pop(context, true);
                     }
                   } catch (e) {
                     print('Error en la solicitud: $e');

@@ -13,6 +13,24 @@ class EquiposTab extends StatefulWidget {
 }
 
 class _EquiposTabState extends State<EquiposTab> {
+  List equipos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEquipos();
+  }
+
+  Future<void> fetchEquipos() async {
+    try {
+      var data = await HttpService().campeonatos();
+      setState(() {
+        equipos = data;
+      });
+    } catch (e) {
+      print('Error fetching campeonatos: $e');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,6 +59,8 @@ class _EquiposTabState extends State<EquiposTab> {
                   id:equipo["id"],
                   nombre:equipo["nombre"],
                   descripcion: equipo['descripcion'],
+                  onEdit: fetchEquipos,
+                  onDelete: fetchEquipos,
                   );
               },);
             })),
@@ -58,7 +78,7 @@ class _EquiposTabState extends State<EquiposTab> {
           MaterialPageRoute ruta =MaterialPageRoute(
             builder:(context)=>EquipoAgregar(),
             );
-          Navigator.push(context,ruta).then((value){setState((){});});
+          Navigator.push(context,ruta).then((value){fetchEquipos();});
         }
         
         )    

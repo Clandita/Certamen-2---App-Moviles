@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/service/http_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EquipoAgregar extends StatefulWidget {
   const EquipoAgregar({Key? key});
@@ -56,7 +57,8 @@ class _EquipoAgregarState extends State<EquipoAgregar> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xff134577),
                 ),
-                child: Text("Agregar equipo"),
+                child: Text("Agregar equipo", style: GoogleFonts.oswald(
+                  textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white))),
                 onPressed: () async {
                   // Validación de campos
                   if (nombreController.text.isEmpty) {
@@ -86,7 +88,7 @@ class _EquipoAgregarState extends State<EquipoAgregar> {
                         errGeneral = errores['general'] != null ? errores['general'][0] : "";
                       });
                     } else {
-                      Navigator.pop(context);
+                      Navigator.pop(context,true);
                     }
                   } catch (e) {
                     setState(() {

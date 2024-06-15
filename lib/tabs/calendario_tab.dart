@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/partidos_agregar.dart';
 import 'package:flutter_application_1/service/http_service.dart';
 import 'package:flutter_application_1/widgets/partido_tile.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CalendarioTab extends StatefulWidget {
   const CalendarioTab({super.key});
@@ -11,6 +12,20 @@ class CalendarioTab extends StatefulWidget {
 }
 
 class _CalendarioTabState extends State<CalendarioTab> {
+    List<dynamic> partidos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPartidos();
+  }
+
+  Future<void> fetchPartidos() async {
+    var partidosData = await HttpService().partidos();
+    setState(() {
+      partidos = partidosData;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +41,18 @@ class _CalendarioTabState extends State<CalendarioTab> {
 
             Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text("PARTIDOS", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              child: Text(
+                "CALENDARIO DE PARTIDOS",
+                style: GoogleFonts.oswald(
+                  textStyle: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
+            
 
             Expanded(child: FutureBuilder(
               future: HttpService().partidos(), 
@@ -41,11 +66,12 @@ class _CalendarioTabState extends State<CalendarioTab> {
                 
                 return PartidoTile(
                   id:partidos["id"],
-                  jugado:partidos["jugado"],
-                  
+                  jugado:partidos["jugado"],  
                   lugar: partidos['lugar'],
                   campeonato_id: partidos['campeonato_id'],
-                  hora:partidos['hora']
+                  hora:partidos['hora'],
+                  onEdit: fetchPartidos,
+                  onDelete: fetchPartidos
                   );
               },);
             })),
@@ -65,7 +91,7 @@ class _CalendarioTabState extends State<CalendarioTab> {
           MaterialPageRoute ruta =MaterialPageRoute(
             builder:(context)=>PartidosAgregar(),
             );
-          Navigator.push(context,ruta).then((value){setState((){});});
+          Navigator.push(context,ruta).then((value){fetchPartidos();});
         })    
 
     );

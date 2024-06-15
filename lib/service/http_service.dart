@@ -17,6 +17,9 @@ class HttpService {
   Future<List<dynamic>> resultados() async {
     return listarDatos('resultados');
   }
+    Future<List<dynamic>> jugadores() async {
+    return listarDatos('jugadores');
+  }
 
   Future<List<dynamic>> listarDatos(String coleccion) async {
     var respuesta = await http.get(Uri.parse(apiUrl + '/' + coleccion));
@@ -264,7 +267,7 @@ Future<Map<String, dynamic>> campeonatosAgregar(
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'hora': hora,
-        'jugado': jugado,
+        'jugado': false,
         'lugar': lugar,
         'campeonato_id': campeonatoId,
       }),
@@ -272,6 +275,45 @@ Future<Map<String, dynamic>> campeonatosAgregar(
 
     return _procesarRespuesta(response);
   }
+
+
+
+
+    Future<Map<String, dynamic>> updatePartidos(int id, String lugar) async {
+
+    var url = Uri.parse('$apiUrl/partidos/$id');
+    var response = await http.put(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      },
+      body: json.encode(<String, dynamic>{
+        'id': id,
+        'lugar': lugar,
+
+
+      }),
+    );
+    print(lugar);
+    return json.decode(response.body);
+  }
+
+    Future<String> deletePartido(int id) async {
+      var url=Uri.parse('$apiUrl/partidos/$id');
+      var response = await http.delete(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+        },
+      
+      );
+    return response.body;
+      }
+
+
+
 
   Future<Map<String, dynamic>> jugadorAgregar(String nombre, String apellido, String rut, String nickname, int equipo_id) async {
     final url = Uri.parse('$apiUrl/jugadores');
@@ -289,15 +331,14 @@ Future<Map<String, dynamic>> campeonatosAgregar(
 
     return _procesarRespuesta(response);
   }
-  Future<Map<String, dynamic>> AgregarEquiposEnCampeonato(String equipo_id, String campeonato_id) async {
+  Future<Map<String, dynamic>> AgregarEquiposEnCampeonato(int equipo_id, int campeonato_id) async {
     final url = Uri.parse('$apiUrl/campeonatoequipo');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'posicion':0,
         'equipo_id': equipo_id,
-        'campeonato_Id': campeonato_id,
+        'campeonato_id': campeonato_id,
       }),
     );
 
@@ -313,7 +354,19 @@ Future<Map<String, dynamic>> campeonatosAgregar(
     }
   }
 
+  Future<Map<String, dynamic>> agregarEquipoACampeonato(int equipoId, int campeonatoId) async {
+  final url = Uri.parse('$apiUrl/campeonatoequipo');
+  final response = await http.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'equipo_id': equipoId,
+      'campeonato_id': campeonatoId,
+    }),
+  );
 
+  return _procesarRespuesta(response);
+}
   Future<List<dynamic>> equipos() async {
     final response = await http.get(Uri.parse('$apiUrl/equipos'));
     if (response.statusCode == 200) {
@@ -323,5 +376,26 @@ Future<Map<String, dynamic>> campeonatosAgregar(
     }
   }
 
+  Future<dynamic> agregarResultado(int equipoId, int partidoId, int puntos, bool ganador) async {
+    final response = await http.post(
+      Uri.parse('$apiUrl/resultados'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'equipo_id': equipoId,
+        'partido_id': partidoId,
+        'puntos': puntos,
+        'ganador': ganador,
+      }),
+    );
 
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to add resultado');
+    }
+  }
 }
+
+

@@ -9,8 +9,10 @@ class JugadorTile extends StatefulWidget {
   final String nombre;
   final String apellido;
   final String nickname; 
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const JugadorTile({this.nombre='sin nombre',this.rut='sin rut',this.apellido='sin apellido', this.nickname='sin nickname',});
+  const JugadorTile({this.nombre='sin nombre',this.rut='sin rut',this.apellido='sin apellido', this.nickname='sin nickname',required this.onEdit, required this.onDelete});
 
   @override
   State<JugadorTile> createState() => _JugadorTileState();
@@ -21,6 +23,11 @@ class _JugadorTileState extends State<JugadorTile> {
   late String nombre;
   late String apellido;
   late String nickname;
+
+
+  void funcionVacia(){
+
+  }
 
   @override
   void initState() {
@@ -40,11 +47,14 @@ class _JugadorTileState extends State<JugadorTile> {
           nombre: nombre,
           apellido: apellido,
           nickname: nickname,
+          onEdit: funcionVacia
         ),
       ),
-    ).then((value){setState(() {
-      
-    });});
+    ).then((value) {
+                      if (value ==true){
+                        widget.onEdit();
+                      }
+                    });
 
     if (updatedData != null) {
       setState(() {
@@ -131,7 +141,7 @@ class _JugadorTileState extends State<JugadorTile> {
           )),
           Container(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
                 onPressed: editarJugador,
@@ -144,6 +154,7 @@ class _JugadorTileState extends State<JugadorTile> {
                   print("nooo");
                 }else{
                   print('${rutController}');
+                  widget.onDelete();
                   setState(() {});
                 }
               }, icon: Icon(MdiIcons.delete))

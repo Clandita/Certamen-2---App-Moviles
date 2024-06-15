@@ -9,9 +9,11 @@ class EquipoTile extends StatefulWidget {
   final int id;
   final String nombre;
   final String descripcion;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
   
 
-  const EquipoTile({this.nombre='sin nombre', this.descripcion='sin descripcion', required this.id});
+  const EquipoTile({this.nombre='sin nombre', this.descripcion='sin descripcion', required this.id,required this.onEdit,required this.onDelete});
 
 
   @override
@@ -125,7 +127,11 @@ class _EquipoTileState extends State<EquipoTile> {
                           nombre: nombre,
                           descripcion: descripcion),
                       ),
-                    );
+                    ).then((value) {
+                      if (value ==true){
+                        widget.onEdit();
+                      }
+                    });
                   },
                   icon: Icon(MdiIcons.bookEdit,color: Colors.white,size: 30,),
                 ),
@@ -142,7 +148,7 @@ class _EquipoTileState extends State<EquipoTile> {
                 if(respuesta=='Error'){
                   print("nooo");
                 }else{
-                  setState(() {});
+                  widget.onDelete();
                 }
                   },
                   icon: Icon(MdiIcons.delete,color: Colors.white,size: 30,),
