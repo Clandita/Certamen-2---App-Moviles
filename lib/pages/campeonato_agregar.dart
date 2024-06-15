@@ -138,7 +138,7 @@ class _CampeonatoAgregarState extends State<CampeonatoAgregar> {
                       Navigator.pop(context);
                     }
                   }
-                },
+                }
               ),
             )
           ],

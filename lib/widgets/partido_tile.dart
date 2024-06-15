@@ -39,7 +39,7 @@ class _PartidoTileState extends State<PartidoTile> {
       borderRadius: BorderRadius.all(Radius.circular(30)),
       child: Container(
         margin: EdgeInsets.fromLTRB(5, 5, 5, 1),
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+        padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: const Color.fromRGBO(158, 158, 158, 0.8),
           border: Border.all(color: Colors.black),
@@ -50,7 +50,7 @@ class _PartidoTileState extends State<PartidoTile> {
               padding: EdgeInsets.all(40),
               child: _buildInfoRow(MdiIcons.clock, 'Partido: ', widget.hora)),
             Divider(color: Colors.black),
-            _buildInfoRow(MdiIcons.mapMarker, 'Lugar', widget.lugar),
+            _buildInfoRow(MdiIcons.mapMarker, 'Lugar :', widget.lugar),
             Divider(color: Colors.black),
             _buildInfoRow(
               MdiIcons.check,
@@ -65,7 +65,7 @@ class _PartidoTileState extends State<PartidoTile> {
                   return Center(child: CircularProgressIndicator());
                 }
                 final nombreCampeonato = snapshot.data ?? 'Sin nombre de campeonato';
-                return _buildInfoRow(MdiIcons.trophy, 'Campeonato', nombreCampeonato);
+                return _buildInfoRow(MdiIcons.trophy, 'Campeonato:', nombreCampeonato);
               },
             ),
             Divider(color: Colors.black),
@@ -83,7 +83,7 @@ class _PartidoTileState extends State<PartidoTile> {
                     }
                     final nombres = nombresSnapshot.data ?? [];
                     final nombresFormateados = nombres.isNotEmpty ? nombres.join(", ") : 'Sin nombres de equipos';
-                    return _buildInfoRow(MdiIcons.accountGroup, 'Nombres de Equipos', nombresFormateados);
+                    return _buildInfoRow(MdiIcons.accountGroup, 'Equipos', nombresFormateados);
                   },
                 );
               },

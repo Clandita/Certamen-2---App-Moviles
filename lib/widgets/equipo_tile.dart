@@ -113,7 +113,7 @@ class _EquipoTileState extends State<EquipoTile> {
           ),
             
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 

@@ -29,6 +29,7 @@ class _CampeonatosTabState extends State<CampeonatosTab> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -45,7 +46,7 @@ class _CampeonatosTabState extends State<CampeonatosTab> {
                 "CAMPEONATOS",
                 style: GoogleFonts.oswald(
                   textStyle: TextStyle(
-                    fontSize: 20,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
